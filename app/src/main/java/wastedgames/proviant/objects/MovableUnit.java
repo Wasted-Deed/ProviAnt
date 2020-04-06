@@ -7,13 +7,13 @@ import wastedgames.proviant.interfaces.Portable;
 public abstract class MovableUnit extends AbstractUnit implements Movable {
     Portable pickedObject;
 
-    int MAX_JUMP_HEIGHT;
+    protected int MAX_JUMP_HEIGHT;
 
-    float speed;
-    float currentSpeed;
-    int jumpSpeed;
+    protected float speed;
+    protected float currentSpeed;
+    protected int jumpSpeed;
+    protected int vision;
     private int currentJumpHeight;
-    int vision;
     private boolean isJumping;
 
 

@@ -1,4 +1,4 @@
-package wastedgames.proviant.objects;
+package wastedgames.proviant.objects.fauna;
 
 import android.graphics.Bitmap;
 
@@ -8,6 +8,10 @@ import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
+import wastedgames.proviant.objects.AbstractUnit;
+import wastedgames.proviant.objects.Appearance;
+import wastedgames.proviant.objects.CollisionMask;
+import wastedgames.proviant.objects.MovableUnit;
 
 public class Snail extends MovableUnit {
     public Snail(int x, int y) {

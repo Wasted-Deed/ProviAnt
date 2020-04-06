@@ -1,4 +1,4 @@
-package wastedgames.proviant.objects;
+package wastedgames.proviant.objects.fauna;
 
 import android.graphics.Bitmap;
 
@@ -6,6 +6,9 @@ import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
+import wastedgames.proviant.objects.Appearance;
+import wastedgames.proviant.objects.CollisionMask;
+import wastedgames.proviant.objects.MovableUnit;
 
 public class Ant extends MovableUnit {
     private int efficiency;

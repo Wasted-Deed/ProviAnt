@@ -45,6 +45,15 @@ public class ResourcesLoader {
                 R.drawable.snail_move_1, options));
         bitmaps.put(Image.SNAIL_3, BitmapFactory.decodeResource(resources,
                 R.drawable.snail_move_2, options));
+        bitmaps.put(Image.BUG_0, BitmapFactory.decodeResource(resources,
+                R.drawable.bug_idle_0, options));
+        bitmaps.put(Image.BUG_1, BitmapFactory.decodeResource(resources,
+                R.drawable.bug_move_0, options));
+        bitmaps.put(Image.BUG_2, BitmapFactory.decodeResource(resources,
+                R.drawable.bug_move_1, options));
+        bitmaps.put(Image.BUG_3, BitmapFactory.decodeResource(resources,
+                R.drawable.bug_move_2, options));
+
         bitmaps.put(Image.TILE_DIRT_0, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_dirt_0, options));
         bitmaps.put(Image.TILE_DIRT_1, BitmapFactory.decodeResource(resources,

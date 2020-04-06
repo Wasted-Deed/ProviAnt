@@ -12,13 +12,14 @@ import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Portable;
 import wastedgames.proviant.maintenance.Physics;
-import wastedgames.proviant.objects.Ant;
 import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.PortableUnit;
-import wastedgames.proviant.objects.Snail;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
 import wastedgames.proviant.objects.environment.Grass;
 import wastedgames.proviant.objects.environment.Stick;
+import wastedgames.proviant.objects.fauna.Ant;
+import wastedgames.proviant.objects.fauna.Bug;
+import wastedgames.proviant.objects.fauna.Snail;
 import wastedgames.proviant.objects.landscape.TileMap;
 
 import static wastedgames.proviant.maintenance.ThreadSolver.IS_TOUCHING;
@@ -54,6 +55,11 @@ public class GameField {
         SCALED_SCREEN_HEIGHT = SCREEN_HEIGHT / SCALE;
         CAMERA = new Vector2(0, 0);
         hero = new Ant(2000, 30);
+        addEnvironment();
+        addUnits();
+    }
+
+    private void addEnvironment() {
         for (int i = 0; i < 10; i++) {
             BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, 81);
             drawableUnits.add(backgroundGrass);
@@ -65,13 +71,21 @@ public class GameField {
             drawableUnits.add(stick);
             movableUnits.add(stick);
         }
+    }
+
+    private void addUnits() {
         for (int i = 0; i < 10; i++) {
             Snail s = new Snail((int) (Math.random() * realSizeX), 30);
             drawableUnits.add(s);
             movableUnits.add(s);
+            Bug b = new Bug((int) (Math.random() * realSizeX), 30);
+            drawableUnits.add(b);
+            movableUnits.add(b);
+
         }
         drawableUnits.add(hero);
         movableUnits.add(hero);
+
     }
 
     private void drawSky(Canvas canvas, Paint paint) {
