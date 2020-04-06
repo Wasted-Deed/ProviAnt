@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.TouchType;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Portable;
@@ -20,6 +21,7 @@ import wastedgames.proviant.objects.environment.Stick;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.Snail;
+import wastedgames.proviant.objects.landscape.Tile;
 import wastedgames.proviant.objects.landscape.TileMap;
 
 import static wastedgames.proviant.maintenance.ThreadSolver.IS_TOUCHING;
@@ -42,6 +44,8 @@ public class GameField {
     private final int realSizeY;
     private Ant hero;
 
+    private TouchType touchType;
+
     public GameField(int mapSizeX, int mapSizeY) {
         this.mapSizeX = mapSizeX;
         this.mapSizeY = mapSizeY;
@@ -57,6 +61,7 @@ public class GameField {
         hero = new Ant(2000, 30);
         addEnvironment();
         addUnits();
+        touchType = TouchType.NONE;
     }
 
     private void addEnvironment() {
@@ -127,7 +132,15 @@ public class GameField {
         if (heroMovement()) {
             return;
         }
+        terraform();
+    }
+
+    private void terraform() {
         if (hero.isPointReachable(getScaledTouchX(), getScaledTouchY())) {
+            Tile touched = map.getTouchedTile();
+            if (touched == null || !touched.isSolid()) {
+                return;
+            }
             PortableUnit drop = map.damageTouchedTile(hero.getEfficiency());
             hero.setCurrentState(UnitState.WORK);
             if (drop != null) {
@@ -146,25 +159,31 @@ public class GameField {
 
     public void update() {
         if (IS_TOUCHING) {
+            touchType = TouchType.TOUCH;
             doWhileTouching();
         } else {
             hero.setCurrentState(UnitState.IDLE);
+            touchType = TouchType.NONE;
         }
         attachCamera();
         for (MovableUnit unit : movableUnits) {
             unit.update();
-            if (IS_TOUCHING &&
-                    hero.isPointReachable(unit.getX(), unit.getY()) &&
-                    unit.isTouched(getScaledTouchX(), getScaledTouchY()) &&
-                    unit instanceof Portable) {
-                hero.setPickedObject((Portable) unit);
-            }
+            checkToPick(unit);
             if (!map.checkUnitCollide(unit.getLeftTop(),
                     unit.getRightBottom(), 0, 1)) {
                 unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
                 continue;
             }
             unit.move(hero);
+        }
+    }
+
+    private void checkToPick(MovableUnit unit) {
+        if (touchType == TouchType.NONE &&
+                hero.isPointReachable(unit.getX(), unit.getY()) &&
+                unit.isTouched(getScaledTouchX(), getScaledTouchY()) &&
+                unit instanceof Portable) {
+            hero.setPickedObject((Portable) unit);
         }
     }
 
