@@ -74,6 +74,16 @@ public class TileMap implements Updatable {
         return null;
     }
 
+    public void fillTouchedTile() {
+        Tile touchedTile = getTouchedTile();
+        if (touchedTile == null) {
+            return;
+        }
+        int x = touchedTile.getX();
+        int y = touchedTile.getY();
+        map[x][y] = new Dirt(x, y, TILE_SIZE, 0);
+    }
+
     public PortableUnit damageTouchedTile(int frequency) {
         Tile touchedTile = getTouchedTile();
         if (touchedTile == null) {

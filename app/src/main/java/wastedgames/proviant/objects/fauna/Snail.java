@@ -11,9 +11,8 @@ import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.Appearance;
 import wastedgames.proviant.objects.CollisionMask;
-import wastedgames.proviant.objects.MovableUnit;
 
-public class Snail extends MovableUnit {
+public class Snail extends ActiveUnit {
     public Snail(int x, int y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.SNAIL_0)));
@@ -28,22 +27,11 @@ public class Snail extends MovableUnit {
         speed = 0.5f;
         vision = GameField.SCALED_SCREEN_WIDTH / 3;
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
+        hp = 3;
     }
 
     @Override
     public void update() {
 
-    }
-
-    @Override
-    public void move(AbstractUnit danger) {
-        if (Math.abs(x - danger.getX()) < vision) {
-            currentState = UnitState.WALK;
-            currentSpeed = danger.getX() > x ? -speed : speed;
-            move(new Vector2(currentSpeed, 0));
-            return;
-        }
-        currentSpeed = 0;
-        currentState = UnitState.IDLE;
     }
 }

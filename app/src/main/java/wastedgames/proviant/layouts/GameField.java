@@ -16,8 +16,11 @@ import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
+import wastedgames.proviant.objects.environment.DirtPile;
 import wastedgames.proviant.objects.environment.Grass;
+import wastedgames.proviant.objects.environment.Meat;
 import wastedgames.proviant.objects.environment.Stick;
+import wastedgames.proviant.objects.fauna.ActiveUnit;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.Snail;
@@ -38,19 +41,13 @@ public class GameField {
     private final TileMap map;
     private final ArrayList<Drawable> drawableUnits;
     private final ArrayList<MovableUnit> movableUnits;
-    private final int mapSizeX;
-    private final int mapSizeY;
     private final int realSizeX;
-    private final int realSizeY;
     private Ant hero;
 
     private TouchType touchType;
 
     public GameField(int mapSizeX, int mapSizeY) {
-        this.mapSizeX = mapSizeX;
-        this.mapSizeY = mapSizeY;
         realSizeX = TileMap.TILE_SIZE * mapSizeX;
-        realSizeY = TileMap.TILE_SIZE * mapSizeY;
         map = new TileMap(mapSizeX, mapSizeY);
         drawableUnits = new ArrayList<>();
         movableUnits = new ArrayList<>();
@@ -65,7 +62,7 @@ public class GameField {
     }
 
     private void addEnvironment() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i <= 10; i++) {
             BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, 81);
             drawableUnits.add(backgroundGrass);
         }
@@ -139,6 +136,9 @@ public class GameField {
         if (hero.isPointReachable(getScaledTouchX(), getScaledTouchY())) {
             Tile touched = map.getTouchedTile();
             if (touched == null || !touched.isSolid()) {
+                if (hero.getPickedObject() != null && hero.getPickedObject() instanceof DirtPile) {
+                    //    map.fillTouchedTile();
+                }
                 return;
             }
             PortableUnit drop = map.damageTouchedTile(hero.getEfficiency());
@@ -166,24 +166,35 @@ public class GameField {
             touchType = TouchType.NONE;
         }
         attachCamera();
-        for (MovableUnit unit : movableUnits) {
-            unit.update();
-            checkToPick(unit);
+        for (int i = 0; i < movableUnits.size(); i++) {
+            MovableUnit unit = movableUnits.get(i);
             if (!map.checkUnitCollide(unit.getLeftTop(),
                     unit.getRightBottom(), 0, 1)) {
                 unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
                 continue;
             }
             unit.move(hero);
+            unit.update();
+            checkTouchedUnit(unit);
         }
     }
 
-    private void checkToPick(MovableUnit unit) {
+    private void checkTouchedUnit(MovableUnit unit) {
         if (touchType == TouchType.NONE &&
                 hero.isPointReachable(unit.getX(), unit.getY()) &&
-                unit.isTouched(getScaledTouchX(), getScaledTouchY()) &&
-                unit instanceof Portable) {
-            hero.setPickedObject((Portable) unit);
+                unit.isTouched(getScaledTouchX(), getScaledTouchY())) {
+            if (unit instanceof Portable) {
+                hero.setPickedObject((Portable) unit);
+            } else if (unit instanceof ActiveUnit) {
+                ((ActiveUnit) unit).damage(hero.getDamage());
+                if (((ActiveUnit) unit).isDestroyed()) {
+                    Meat meat = new Meat(unit.getX(), unit.getY());
+                    movableUnits.add(meat);
+                    drawableUnits.add(meat);
+                    movableUnits.remove(unit);
+                    drawableUnits.remove(unit);
+                }
+            }
         }
     }
 

@@ -31,6 +31,7 @@ public class Ant extends MovableUnit {
                 maskBit.getWidth() / 2 - 9, 0);
         jumpSpeed = 2;
         speed = 1;
+        damage = 1;
         MAX_JUMP_HEIGHT = Physics.ANT_JUMP_HEIGHT;
     }
 

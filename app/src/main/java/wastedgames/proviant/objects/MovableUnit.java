@@ -13,6 +13,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     protected float currentSpeed;
     protected int jumpSpeed;
     protected int vision;
+    protected int damage;
     private int currentJumpHeight;
     private boolean isJumping;
 
@@ -71,10 +72,18 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         pickedObject.setPickUp(true);
     }
 
+    public Portable getPickedObject() {
+        return pickedObject;
+    }
+
     public void throwPickedObject() {
         if (this.pickedObject != null) {
             this.pickedObject.setHolder(null);
             this.pickedObject.setPickUp(false);
         }
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

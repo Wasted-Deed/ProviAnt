@@ -2,18 +2,15 @@ package wastedgames.proviant.objects.fauna;
 
 import android.graphics.Bitmap;
 
-import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
-import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.Appearance;
 import wastedgames.proviant.objects.CollisionMask;
-import wastedgames.proviant.objects.MovableUnit;
 
-public class Bug extends MovableUnit {
+public class Bug extends ActiveUnit {
     public Bug(int x, int y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.BUG_0)));
@@ -28,6 +25,7 @@ public class Bug extends MovableUnit {
         speed = 0.5f;
         vision = GameField.SCALED_SCREEN_WIDTH / 3;
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
+        hp = 4;
     }
 
     @Override
@@ -35,15 +33,5 @@ public class Bug extends MovableUnit {
 
     }
 
-    @Override
-    public void move(AbstractUnit danger) {
-        if (Math.abs(x - danger.getX()) < vision) {
-            currentState = UnitState.WALK;
-            currentSpeed = danger.getX() > x ? -speed : speed;
-            move(new Vector2(currentSpeed, 0));
-            return;
-        }
-        currentSpeed = 0;
-        currentState = UnitState.IDLE;
-    }
+
 }

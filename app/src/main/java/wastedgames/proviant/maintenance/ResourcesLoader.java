@@ -53,7 +53,10 @@ public class ResourcesLoader {
                 R.drawable.bug_move_1, options));
         bitmaps.put(Image.BUG_3, BitmapFactory.decodeResource(resources,
                 R.drawable.bug_move_2, options));
-
+        bitmaps.put(Image.MEAT_0, BitmapFactory.decodeResource(resources,
+                R.drawable.meat_0, options));
+        bitmaps.put(Image.MEAT_1, BitmapFactory.decodeResource(resources,
+                R.drawable.meat_1, options));
         bitmaps.put(Image.TILE_DIRT_0, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_dirt_0, options));
         bitmaps.put(Image.TILE_DIRT_1, BitmapFactory.decodeResource(resources,
