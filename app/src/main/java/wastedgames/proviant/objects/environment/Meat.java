@@ -19,5 +19,6 @@ public class Meat extends PortableUnit {
         mask = new CollisionMask(-maskBit.getWidth() / 2,
                 -maskBit.getHeight(),
                 maskBit.getWidth() / 2, 0);
+        randomMirror();
     }
 }

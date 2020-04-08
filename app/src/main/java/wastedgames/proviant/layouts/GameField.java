@@ -16,9 +16,11 @@ import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
+import wastedgames.proviant.objects.environment.Chamomile;
 import wastedgames.proviant.objects.environment.DirtPile;
 import wastedgames.proviant.objects.environment.Grass;
 import wastedgames.proviant.objects.environment.Meat;
+import wastedgames.proviant.objects.environment.Rose;
 import wastedgames.proviant.objects.environment.Stick;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
 import wastedgames.proviant.objects.fauna.Ant;
@@ -62,16 +64,23 @@ public class GameField {
     }
 
     private void addEnvironment() {
+        int y1 = 97;
         for (int i = 0; i <= 10; i++) {
-            BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, 81);
+            BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, y1);
             drawableUnits.add(backgroundGrass);
         }
         for (int i = 0; i < 50; i++) {
-            Grass grass = new Grass((int) (Math.random() * realSizeX), 81);
-            Stick stick = new Stick((int) (Math.random() * realSizeX), 81);
+            Grass grass = new Grass((int) (Math.random() * realSizeX), y1);
+            Stick stick = new Stick((int) (Math.random() * realSizeX), y1);
             drawableUnits.add(grass);
             drawableUnits.add(stick);
             movableUnits.add(stick);
+            if (i % 4 == 0) {
+                Chamomile chamomile = new Chamomile((int) (Math.random() * realSizeX), y1);
+                Rose rose = new Rose((int) (Math.random() * realSizeX), y1);
+                drawableUnits.add(chamomile);
+                drawableUnits.add(rose);
+            }
         }
     }
 

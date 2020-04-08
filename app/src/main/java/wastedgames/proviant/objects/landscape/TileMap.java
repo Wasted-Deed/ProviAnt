@@ -24,17 +24,17 @@ public class TileMap implements Updatable {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         map = new Tile[sizeX][sizeY];
-        fillMap();
+        fillMap(11);
     }
 
-    private void fillMap() {
+    private void fillMap(int start) {
         for (int x = 0; x < sizeX; x++) {
-            for (int y = 9; y < sizeY; y++) {
-                if (y == 9) {
+            for (int y = start; y < sizeY; y++) {
+                if (y == start) {
                     map[x][y] = new GrassTop(x, y, TILE_SIZE);
                     continue;
                 }
-                if (y == 10) {
+                if (y == start + 1) {
                     map[x][y] = new DirtGrass(x, y, TILE_SIZE, (int) (Math.random() * 3));
                     continue;
                 }
@@ -99,7 +99,7 @@ public class TileMap implements Updatable {
             int y = getTouchedTileY();
             setTileEnvironment(x, y);
             map[x][y] = new DirtBack(x, y, TILE_SIZE);
-            return new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * (TILE_SIZE + 1));
+            return new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE);
         }
         return null;
     }

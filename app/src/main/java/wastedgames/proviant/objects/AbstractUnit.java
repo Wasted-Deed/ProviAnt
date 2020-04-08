@@ -22,7 +22,7 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     protected int hp;
     protected int actionDistance;
 
-    boolean isMirrored;
+    protected boolean isMirrored;
 
     public AbstractUnit(float x, float y) {
         this.x = x;
@@ -106,6 +106,10 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     @Override
     public int getHeight() {
         return getCurrentFrame().getHeight();
+    }
+
+    protected void randomMirror() {
+        isMirrored = Math.random() > 0.5;
     }
 
     public boolean isTouched(int x, int y) {

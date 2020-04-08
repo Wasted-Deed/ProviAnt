@@ -103,6 +103,25 @@ public class ResourcesLoader {
                 R.drawable.dirt_pile_0, options));
         bitmaps.put(Image.BACKGROUND_GRASS, BitmapFactory.decodeResource(resources,
                 R.drawable.background_grass, options));
+        bitmaps.put(Image.CHAMOMILE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_0, options));
+        bitmaps.put(Image.CHAMOMILE_1, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_1, options));
+        bitmaps.put(Image.CHAMOMILE_2, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_2, options));
+        bitmaps.put(Image.CHAMOMILE_3, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_3, options));
+        bitmaps.put(Image.CHAMOMILE_4, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_4, options));
+        bitmaps.put(Image.CHAMOMILE_5, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_3, options));
+        bitmaps.put(Image.CHAMOMILE_6, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_2, options));
+        bitmaps.put(Image.CHAMOMILE_7, BitmapFactory.decodeResource(resources,
+                R.drawable.chamomile_1, options));
+        bitmaps.put(Image.ROSE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_0, options));
+
     }
 
     public static Bitmap[] getBitmapSet(Image first, Image last) {
