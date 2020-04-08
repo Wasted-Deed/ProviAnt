@@ -121,6 +121,20 @@ public class ResourcesLoader {
                 R.drawable.chamomile_1, options));
         bitmaps.put(Image.ROSE_0, BitmapFactory.decodeResource(resources,
                 R.drawable.rose_0, options));
+        bitmaps.put(Image.ROSE_1, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_1, options));
+        bitmaps.put(Image.ROSE_2, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_2, options));
+        bitmaps.put(Image.ROSE_3, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_3, options));
+        bitmaps.put(Image.ROSE_4, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_4, options));
+        bitmaps.put(Image.ROSE_5, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_3, options));
+        bitmaps.put(Image.ROSE_6, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_2, options));
+        bitmaps.put(Image.ROSE_7, BitmapFactory.decodeResource(resources,
+                R.drawable.rose_1, options));
 
     }
 

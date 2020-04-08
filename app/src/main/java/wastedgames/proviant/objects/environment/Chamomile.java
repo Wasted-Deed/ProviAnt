@@ -1,24 +1,19 @@
 package wastedgames.proviant.objects.environment;
 
-import android.graphics.Bitmap;
-
 import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.Appearance;
-import wastedgames.proviant.objects.CollisionMask;
 
 public class Chamomile extends AbstractUnit {
     public Chamomile(float x, float y) {
         super(x, y);
         appearance.put(UnitState.EXIST,
-                new Appearance(ResourcesLoader.getImage(Image.CHAMOMILE_0)));
+                new Appearance(ResourcesLoader.getBitmapSet(Image.CHAMOMILE_0, Image.CHAMOMILE_7),
+                        0, 6));
         currentState = UnitState.EXIST;
-        Bitmap maskBit = ResourcesLoader.getImage(Image.CHAMOMILE_0);
-        mask = new CollisionMask(-maskBit.getWidth() / 2,
-                -maskBit.getHeight(),
-                maskBit.getWidth() / 2, 0);
+        setStandardMask(Image.CHAMOMILE_0);
         randomMirror();
     }
 

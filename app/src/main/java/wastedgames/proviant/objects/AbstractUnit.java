@@ -8,9 +8,11 @@ import android.graphics.Paint;
 import java.util.HashMap;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Updatable;
+import wastedgames.proviant.maintenance.ResourcesLoader;
 
 public abstract class AbstractUnit implements Updatable, Drawable {
     protected HashMap<UnitState, Appearance> appearance;
@@ -110,6 +112,14 @@ public abstract class AbstractUnit implements Updatable, Drawable {
 
     protected void randomMirror() {
         isMirrored = Math.random() > 0.5;
+    }
+
+    protected void setStandardMask(Image image) {
+        Bitmap maskBit = ResourcesLoader.getImage(image);
+        mask = new CollisionMask(-maskBit.getWidth() / 2,
+                -maskBit.getHeight(),
+                maskBit.getWidth() / 2, 0);
+
     }
 
     public boolean isTouched(int x, int y) {
