@@ -122,6 +122,10 @@ public abstract class AbstractUnit implements Updatable, Drawable {
 
     }
 
+    public UnitState getCurrentState() {
+        return currentState;
+    }
+
     public boolean isTouched(int x, int y) {
         return getLeftTop().getX() < x && getLeftTop().getY() < y &&
                 getRightBottom().getX() > x && getRightBottom().getY() > y;

@@ -25,9 +25,11 @@ import wastedgames.proviant.objects.environment.Stick;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Bug;
+import wastedgames.proviant.objects.fauna.LadyBug;
 import wastedgames.proviant.objects.fauna.Snail;
 import wastedgames.proviant.objects.landscape.Tile;
 import wastedgames.proviant.objects.landscape.TileMap;
+import wastedgames.proviant.objects.ui.Interface;
 
 import static wastedgames.proviant.maintenance.ThreadSolver.IS_TOUCHING;
 import static wastedgames.proviant.maintenance.ThreadSolver.SCREEN_HEIGHT;
@@ -45,7 +47,7 @@ public class GameField {
     private final ArrayList<MovableUnit> movableUnits;
     private final int realSizeX;
     private Ant hero;
-
+    private Interface heroInterface;
     private TouchType touchType;
 
     public GameField(int mapSizeX, int mapSizeY) {
@@ -58,6 +60,7 @@ public class GameField {
         SCALED_SCREEN_HEIGHT = SCREEN_HEIGHT / SCALE;
         CAMERA = new Vector2(0, 0);
         hero = new Ant(2000, 30);
+        heroInterface = new Interface(hero);
         addEnvironment();
         addUnits();
         touchType = TouchType.NONE;
@@ -92,7 +95,9 @@ public class GameField {
             Bug b = new Bug((int) (Math.random() * realSizeX), 30);
             drawableUnits.add(b);
             movableUnits.add(b);
-
+            LadyBug lb = new LadyBug((int) (Math.random() * realSizeX), 30);
+            drawableUnits.add(lb);
+            movableUnits.add(lb);
         }
         drawableUnits.add(hero);
         movableUnits.add(hero);
@@ -113,6 +118,7 @@ public class GameField {
         map.draw(canvas, paint, CAMERA, true);
         drawUnits(canvas, paint);
         map.draw(canvas, paint, CAMERA, false);
+        heroInterface.draw(canvas, paint, CAMERA);
     }
 
     private boolean heroMovement() {

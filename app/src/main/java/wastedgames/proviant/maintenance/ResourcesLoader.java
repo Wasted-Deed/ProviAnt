@@ -53,6 +53,14 @@ public class ResourcesLoader {
                 R.drawable.bug_move_1, options));
         bitmaps.put(Image.BUG_3, BitmapFactory.decodeResource(resources,
                 R.drawable.bug_move_2, options));
+        bitmaps.put(Image.LADYBUG_0, BitmapFactory.decodeResource(resources,
+                R.drawable.ladybug_idle_0, options));
+        bitmaps.put(Image.LADYBUG_1, BitmapFactory.decodeResource(resources,
+                R.drawable.ladybug_move_0, options));
+        bitmaps.put(Image.LADYBUG_2, BitmapFactory.decodeResource(resources,
+                R.drawable.ladybug_move_1, options));
+        bitmaps.put(Image.LADYBUG_3, BitmapFactory.decodeResource(resources,
+                R.drawable.ladybug_move_2, options));
         bitmaps.put(Image.MEAT_0, BitmapFactory.decodeResource(resources,
                 R.drawable.meat_0, options));
         bitmaps.put(Image.MEAT_1, BitmapFactory.decodeResource(resources,
@@ -135,6 +143,14 @@ public class ResourcesLoader {
                 R.drawable.rose_2, options));
         bitmaps.put(Image.ROSE_7, BitmapFactory.decodeResource(resources,
                 R.drawable.rose_1, options));
+        bitmaps.put(Image.PROCESS_BAR_0, BitmapFactory.decodeResource(resources,
+                R.drawable.processing_0, options));
+        bitmaps.put(Image.PROCESS_BAR_1, BitmapFactory.decodeResource(resources,
+                R.drawable.processing_1, options));
+        bitmaps.put(Image.PROCESS_BAR_2, BitmapFactory.decodeResource(resources,
+                R.drawable.processing_2, options));
+        bitmaps.put(Image.PROCESS_BAR_3, BitmapFactory.decodeResource(resources,
+                R.drawable.processing_3, options));
 
     }
 

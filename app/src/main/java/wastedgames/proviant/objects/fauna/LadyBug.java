@@ -7,14 +7,14 @@ import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
 
-public class Bug extends ActiveUnit {
-    public Bug(int x, int y) {
+public class LadyBug extends ActiveUnit {
+    public LadyBug(int x, int y) {
         super(x, y);
-        appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.BUG_0)));
+        appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.LADYBUG_0)));
         appearance.put(UnitState.WALK,
-                new Appearance(ResourcesLoader.getBitmapSet(Image.BUG_1, Image.BUG_3),
+                new Appearance(ResourcesLoader.getBitmapSet(Image.LADYBUG_1, Image.LADYBUG_3),
                         0, 8));
-        setStandardMask(Image.BUG_0);
+        setStandardMask(Image.LADYBUG_0);
         jumpSpeed = 2;
         speed = 0.5f;
         vision = GameField.SCALED_SCREEN_WIDTH / 3;
