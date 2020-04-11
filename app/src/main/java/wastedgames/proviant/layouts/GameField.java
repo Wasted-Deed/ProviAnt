@@ -8,11 +8,13 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.Font;
 import wastedgames.proviant.enumerations.TouchType;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Portable;
 import wastedgames.proviant.maintenance.Physics;
+import wastedgames.proviant.maintenance.Text;
 import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
@@ -42,6 +44,7 @@ public class GameField {
     public static int SCALED_SCREEN_HEIGHT;
     private static Vector2 CAMERA;
 
+    private final Text text;
     private final TileMap map;
     private final ArrayList<Drawable> drawableUnits;
     private final ArrayList<MovableUnit> movableUnits;
@@ -52,6 +55,7 @@ public class GameField {
 
     public GameField(int mapSizeX, int mapSizeY) {
         realSizeX = TileMap.TILE_SIZE * mapSizeX;
+        text = new Text(Font.BASIC);
         map = new TileMap(mapSizeX, mapSizeY);
         drawableUnits = new ArrayList<>();
         movableUnits = new ArrayList<>();
@@ -119,6 +123,7 @@ public class GameField {
         drawUnits(canvas, paint);
         map.draw(canvas, paint, CAMERA, false);
         heroInterface.draw(canvas, paint, CAMERA);
+        text.drawText((int) CAMERA.getX(), (int) CAMERA.getY(), canvas, paint, "DESCRIPTION IS NOW HERE LOL");
     }
 
     private boolean heroMovement() {

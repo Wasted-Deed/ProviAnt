@@ -12,6 +12,7 @@ import wastedgames.proviant.enumerations.Image;
 
 public class ResourcesLoader {
     private static HashMap<Image, Bitmap> bitmaps;
+    public static Bitmap BASIC_FONT;
 
     public static void loadResources(Resources resources) {
         bitmaps = new HashMap<>();
@@ -151,6 +152,7 @@ public class ResourcesLoader {
                 R.drawable.processing_2, options));
         bitmaps.put(Image.PROCESS_BAR_3, BitmapFactory.decodeResource(resources,
                 R.drawable.processing_3, options));
+        BASIC_FONT = BitmapFactory.decodeResource(resources, R.drawable.font_0, options);
 
     }
 

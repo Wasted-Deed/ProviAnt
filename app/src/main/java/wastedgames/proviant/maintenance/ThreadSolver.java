@@ -71,6 +71,9 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
 
     @Override
     public void draw(Canvas canvas) {
+        if(canvas == null){
+            return;
+        }
         super.draw(canvas);
         switch (currentLayout) {
             case GAME_FIELD:
