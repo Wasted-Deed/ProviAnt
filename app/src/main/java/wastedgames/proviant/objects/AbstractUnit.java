@@ -21,6 +21,7 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     protected float x;
     protected float y;
 
+    protected static int MAX_HP;
     protected int hp;
     protected int actionDistance;
 
@@ -129,5 +130,17 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     public boolean isTouched(int x, int y) {
         return getLeftTop().getX() < x && getLeftTop().getY() < y &&
                 getRightBottom().getX() > x && getRightBottom().getY() > y;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void damage(int damage) {
+        hp -= damage;
+    }
+
+    public boolean isDestroyed() {
+        return hp <= 0;
     }
 }

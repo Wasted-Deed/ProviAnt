@@ -4,14 +4,20 @@ import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
-import wastedgames.proviant.objects.PortableUnit;
+import wastedgames.proviant.objects.MovableUnit;
 
-public class DirtPile extends BuildingUnit {
-    public DirtPile(int x, int y) {
+public class Stone extends MovableUnit {
+    public Stone(int x, int y) {
         super(x, y);
         appearance.put(UnitState.EXIST,
-                new Appearance(ResourcesLoader.getImage(Image.DIRT_PILE_0)));
+                new Appearance(ResourcesLoader.getImage(Image.STONE_0)));
         currentState = UnitState.EXIST;
-        setStandardMask(Image.DIRT_PILE_0);
+        setStandardMask(Image.STONE_0);
+        randomMirror();
+    }
+
+    @Override
+    public void update() {
+
     }
 }

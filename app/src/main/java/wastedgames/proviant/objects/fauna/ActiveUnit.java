@@ -6,7 +6,6 @@ import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
 
 public class ActiveUnit extends MovableUnit {
-    protected int hp;
 
     public ActiveUnit(int x, int y) {
         super(x, y);
@@ -19,6 +18,9 @@ public class ActiveUnit extends MovableUnit {
 
     @Override
     public void move(AbstractUnit danger) {
+        if(danger == null){
+            return;
+        }
         if (Math.abs(x - danger.getX()) < vision) {
             currentState = UnitState.WALK;
             currentSpeed = danger.getX() > x ? -speed : speed;
@@ -27,13 +29,5 @@ public class ActiveUnit extends MovableUnit {
         }
         currentSpeed = 0;
         currentState = UnitState.IDLE;
-    }
-
-    public void damage(int damage) {
-        hp -= damage;
-    }
-
-    public boolean isDestroyed() {
-        return hp <= 0;
     }
 }

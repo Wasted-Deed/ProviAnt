@@ -18,6 +18,8 @@ public class ResourcesLoader {
         bitmaps = new HashMap<>();
         Options options = new Options();
         options.inScaled = false;
+        bitmaps.put(Image.ANT_IDLE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.ant_idle_0, options));
         bitmaps.put(Image.ANT_WORK_0, BitmapFactory.decodeResource(resources,
                 R.drawable.ant_work_0, options));
         bitmaps.put(Image.ANT_WORK_1, BitmapFactory.decodeResource(resources,
@@ -108,6 +110,10 @@ public class ResourcesLoader {
                 R.drawable.grass_11, options));
         bitmaps.put(Image.STICK_0, BitmapFactory.decodeResource(resources,
                 R.drawable.stick_0, options));
+        bitmaps.put(Image.STONE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.stone_0, options));
+        bitmaps.put(Image.SUN_0, BitmapFactory.decodeResource(resources,
+                R.drawable.sun_0, options));
         bitmaps.put(Image.DIRT_PILE_0, BitmapFactory.decodeResource(resources,
                 R.drawable.dirt_pile_0, options));
         bitmaps.put(Image.BACKGROUND_GRASS, BitmapFactory.decodeResource(resources,
@@ -152,6 +158,18 @@ public class ResourcesLoader {
                 R.drawable.processing_2, options));
         bitmaps.put(Image.PROCESS_BAR_3, BitmapFactory.decodeResource(resources,
                 R.drawable.processing_3, options));
+        bitmaps.put(Image.LARVA_0, BitmapFactory.decodeResource(resources,
+                R.drawable.larva_0, options));
+        bitmaps.put(Image.LARVA_1, BitmapFactory.decodeResource(resources,
+                R.drawable.larva_1, options));
+        bitmaps.put(Image.LARVA_2, BitmapFactory.decodeResource(resources,
+                R.drawable.larva_2, options));
+        bitmaps.put(Image.LARVA_3, BitmapFactory.decodeResource(resources,
+                R.drawable.larva_3, options));
+        bitmaps.put(Image.LARVA_4, BitmapFactory.decodeResource(resources,
+                R.drawable.larva_2, options));
+        bitmaps.put(Image.LARVA_5, BitmapFactory.decodeResource(resources,
+                R.drawable.larva_1, options));
         BASIC_FONT = BitmapFactory.decodeResource(resources, R.drawable.font_0, options);
 
     }

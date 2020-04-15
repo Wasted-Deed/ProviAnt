@@ -29,7 +29,7 @@ public class TileMap implements Updatable {
 
     private void fillMap(int start) {
         for (int x = 0; x < sizeX; x++) {
-            for (int y = start; y < sizeY; y++) {
+            for (int y = 0; y < sizeY; y++) {
                 if (y == start) {
                     map[x][y] = new GrassTop(x, y, TILE_SIZE);
                     continue;
@@ -38,7 +38,11 @@ public class TileMap implements Updatable {
                     map[x][y] = new DirtGrass(x, y, TILE_SIZE, (int) (Math.random() * 3));
                     continue;
                 }
-                map[x][y] = new Dirt(x, y, TILE_SIZE, (int) (Math.random() * 3));
+                if (y > start + 1) {
+                    map[x][y] = new Dirt(x, y, TILE_SIZE, (int) (Math.random() * 3));
+                } else {
+                    map[x][y] = new AirTile(x, y, TILE_SIZE);
+                }
             }
         }
     }
@@ -51,6 +55,9 @@ public class TileMap implements Updatable {
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 if (!checkBounds(x, y)) {
+                    continue;
+                }
+                if (map[x][y].getType() == TileType.AIR) {
                     continue;
                 }
                 if (map[x][y].getType() == TileType.BACKGROUND && isBackground ||
@@ -75,13 +82,11 @@ public class TileMap implements Updatable {
     }
 
     public void fillTouchedTile() {
-        Tile touchedTile = getTouchedTile();
-        if (touchedTile == null) {
-            return;
+        int x = getTouchedTileX();
+        int y = getTouchedTileY();
+        if (checkBounds(x, y)) {
+            map[x][y] = new Dirt(x, y, TILE_SIZE, 0);
         }
-        int x = touchedTile.getX();
-        int y = touchedTile.getY();
-        map[x][y] = new Dirt(x, y, TILE_SIZE, 0);
     }
 
     public PortableUnit damageTouchedTile(int frequency) {
@@ -97,16 +102,18 @@ public class TileMap implements Updatable {
         if (touchedTile.isDestroyed()) {
             int x = getTouchedTileX();
             int y = getTouchedTileY();
-            setTileEnvironment(x, y);
             map[x][y] = new DirtBack(x, y, TILE_SIZE);
+            setTileEnvironment(x, y);
             return new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE);
         }
         return null;
     }
 
     private void setTileEnvironment(int x, int y) {
-        if (checkBounds(x, y - 1) && map[x][y - 1].getType() == TileType.GRASS) {
-            map[x][y - 1] = null;
+        if (checkBounds(x, y - 1) && checkBounds(x, y)) {
+            if (map[x][y - 1].getType() == TileType.GRASS) {
+                map[x][y - 1] = null;
+            }
         }
     }
 

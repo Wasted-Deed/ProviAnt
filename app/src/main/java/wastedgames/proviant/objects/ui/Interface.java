@@ -1,6 +1,7 @@
 package wastedgames.proviant.objects.ui;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import wastedgames.proviant.engine.Vector2;
@@ -28,6 +29,14 @@ public class Interface implements Drawable, Updatable {
             process.setY(holder.getY() - step);
             process.draw(canvas, paint, camera);
         }
+        int color = paint.getColor();
+        paint.setColor(Color.RED);
+        for (int i = 0; i < holder.getHp(); i++) {
+            int x1 = (int) (5 + camera.getX() + i * 10);
+            int y1 = (int) (camera.getY() + 5);
+            canvas.drawOval(x1, y1, x1 + 5, y1 + 5, paint);
+        }
+        paint.setColor(color);
     }
 
     @Override

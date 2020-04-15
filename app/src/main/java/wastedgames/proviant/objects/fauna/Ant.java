@@ -1,13 +1,10 @@
 package wastedgames.proviant.objects.fauna;
 
-import android.graphics.Bitmap;
-
 import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
-import wastedgames.proviant.objects.CollisionMask;
 import wastedgames.proviant.objects.MovableUnit;
 
 public class Ant extends MovableUnit {
@@ -15,7 +12,7 @@ public class Ant extends MovableUnit {
 
     public Ant(int x, int y) {
         super(x, y);
-        appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.ANT_WORK_0)));
+        appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.ANT_WALK_0)));
         appearance.put(UnitState.WORK,
                 new Appearance(ResourcesLoader.getBitmapSet(Image.ANT_WORK_0, Image.ANT_WORK_4),
                         0, 4));
@@ -24,15 +21,11 @@ public class Ant extends MovableUnit {
                         0, 4));
         actionDistance = 32;
         efficiency = 8;
-        Bitmap maskBit = ResourcesLoader.getImage(Image.ANT_WORK_0);
-
-        mask = new CollisionMask(-maskBit.getWidth() / 2,
-                -15,
-                maskBit.getWidth() / 2 - 9, 0);
+        setStandardMask(Image.ANT_WORK_0);
         jumpSpeed = 2;
-        speed = 1;
-        damage = 1;
+        speed = damage = 1;
         MAX_JUMP_HEIGHT = Physics.ANT_JUMP_HEIGHT;
+        hp = MAX_HP = 5;
     }
 
     @Override
