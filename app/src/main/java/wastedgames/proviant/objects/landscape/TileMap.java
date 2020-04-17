@@ -16,6 +16,8 @@ import static wastedgames.proviant.layouts.GameField.getScaledTouchY;
 
 public class TileMap implements Updatable {
     public final static int TILE_SIZE = 8;
+    private final int MAX_CAVE_SIZE = 40;
+    private final int FLOOR_START = 11;
     private Tile[][] map;
     private int sizeX;
     private int sizeY;
@@ -24,7 +26,14 @@ public class TileMap implements Updatable {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         map = new Tile[sizeX][sizeY];
-        fillMap(11);
+        fillMap(FLOOR_START);
+        generateCaves(100);
+    }
+
+    private void generateCaves(int count) {
+        for (int i = 0; i < count; i++) {
+            generateCave();
+        }
     }
 
     private void fillMap(int start) {
@@ -44,6 +53,31 @@ public class TileMap implements Updatable {
                     map[x][y] = new AirTile(x, y, TILE_SIZE);
                 }
             }
+        }
+    }
+
+    private void generateCave() {
+        int startX = (int) (Math.random() * sizeX);
+        int startY = (int) (Math.random() * sizeY);
+        generateCave(startX, startY, 0);
+        generateCave(startX + 1, startY, 0);
+        generateCave(startX - 1, startY, 0);
+        generateCave(startX, startY + 1, 0);
+        generateCave(startX, startY - 1, 0);
+    }
+
+    private void generateCave(int x, int y, int size) {
+        if (!checkBounds(x, y) || size >= MAX_CAVE_SIZE || y <= FLOOR_START) {
+            return;
+        } else {
+            destroyDirtTile(x, y);
+        }
+        int dir = Math.random() > 0.5f ? 1 : -1;
+        boolean isDirX = Math.random() > 0.5;
+        if (isDirX) {
+            generateCave(x + dir, y, size + (int) (Math.random() * 2) + 1);
+        } else {
+            generateCave(x, y + dir, size + (int) (Math.random() * 2) + 1);
         }
     }
 
@@ -102,11 +136,15 @@ public class TileMap implements Updatable {
         if (touchedTile.isDestroyed()) {
             int x = getTouchedTileX();
             int y = getTouchedTileY();
-            map[x][y] = new DirtBack(x, y, TILE_SIZE);
-            setTileEnvironment(x, y);
+            destroyDirtTile(x, y);
             return new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE);
         }
         return null;
+    }
+
+    private void destroyDirtTile(int x, int y) {
+        map[x][y] = new DirtBack(x, y, TILE_SIZE);
+        setTileEnvironment(x, y);
     }
 
     private void setTileEnvironment(int x, int y) {
