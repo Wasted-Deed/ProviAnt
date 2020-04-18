@@ -11,6 +11,7 @@ public class Bug extends ActiveUnit {
     public Bug(int x, int y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.BUG_0)));
+        appearance.put(UnitState.CRAWL, new Appearance(ResourcesLoader.getImage(Image.BUG_CRAWL_0)));
         appearance.put(UnitState.WALK,
                 new Appearance(ResourcesLoader.getBitmapSet(Image.BUG_1, Image.BUG_3),
                         0, 8));

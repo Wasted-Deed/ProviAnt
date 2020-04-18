@@ -18,7 +18,7 @@ public class ActiveUnit extends MovableUnit {
 
     @Override
     public void move(AbstractUnit danger) {
-        if (danger == null) {
+        if (danger == null || currentState == UnitState.CRAWL) {
             return;
         }
         if (Math.abs(x - danger.getX()) < vision) {

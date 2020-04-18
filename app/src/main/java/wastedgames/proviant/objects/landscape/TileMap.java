@@ -10,8 +10,7 @@ import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.DirtPile;
 
 import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN;
-import static wastedgames.proviant.layouts.GameField.getScaledTouchX;
-import static wastedgames.proviant.layouts.GameField.getScaledTouchY;
+import static wastedgames.proviant.layouts.GameField.getScaledTouch;
 
 public class TileMap implements Updatable {
     public final static int TILE_SIZE = 8;
@@ -155,11 +154,11 @@ public class TileMap implements Updatable {
     }
 
     public int getTouchedTileX() {
-        return getScaledTouchX() / TILE_SIZE;
+        return (int) (getScaledTouch().getX() / TILE_SIZE);
     }
 
     public int getTouchedTileY() {
-        return getScaledTouchY() / TILE_SIZE;
+        return (int) (getScaledTouch().getY() / TILE_SIZE);
     }
 
     public boolean checkUnitCollide(Vector2 leftTop, Vector2 rightBottom, int dirX, int dirY) {

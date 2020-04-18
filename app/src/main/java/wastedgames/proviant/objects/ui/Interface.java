@@ -60,4 +60,16 @@ public class Interface implements Drawable, Updatable {
         process.setY(holder.getY() - STEP);
         hp.setCurrentHP(holder.getHp());
     }
+
+    public HpBar getHp() {
+        return hp;
+    }
+
+    public ProcessingBar getProcess() {
+        return process;
+    }
+
+    public Controller getController() {
+        return controller;
+    }
 }

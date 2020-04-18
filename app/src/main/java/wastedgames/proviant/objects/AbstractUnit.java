@@ -79,6 +79,10 @@ public abstract class AbstractUnit implements Updatable, Drawable {
                 Math.abs(this.y - y) <= actionDistance;
     }
 
+    public boolean isPointReachable(Vector2 point) {
+        return isPointReachable((int) point.getX(), (int) point.getY());
+    }
+
     public Vector2 getLeftTop() {
         Vector2 lt = mask.getLeftTop();
         Vector2 rb = mask.getRightBottom();
@@ -137,6 +141,10 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     public boolean isTouched(int x, int y) {
         return getLeftTop().getX() < x && getLeftTop().getY() < y &&
                 getRightBottom().getX() > x && getRightBottom().getY() > y;
+    }
+
+    public boolean isTouched(Vector2 touch) {
+        return isTouched((int) touch.getX(), (int) touch.getY());
     }
 
     public int getHp() {

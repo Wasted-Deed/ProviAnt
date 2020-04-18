@@ -149,6 +149,7 @@ public class GameField {
     }
 
     private void doWhileTouching() {
+        heroInterface.getController().updateCenterPosition(getDisplayTouch());
         if (heroMovement()) {
             return;
         }
@@ -156,7 +157,7 @@ public class GameField {
     }
 
     private void terraform() {
-        if (hero.isPointReachable(getScaledTouchX(), getScaledTouchY())) {
+        if (hero.isPointReachable(getScaledTouch())) {
             Tile touched = map.getTouchedTile();
             if (touched == null || !touched.isSolid()) {
                 if (hero.getPickedObject() != null && hero.getPickedObject() instanceof BuildingUnit) {
@@ -197,6 +198,7 @@ public class GameField {
         } else {
             hero.setCurrentState(UnitState.IDLE);
             touchType = TouchType.NONE;
+            heroInterface.getController().setToInitialPosition();
         }
         attachCamera();
     }
@@ -228,12 +230,14 @@ public class GameField {
         canvas.translate(-CAMERA.getX(), -CAMERA.getY());
     }
 
-    public static int getScaledTouchX() {
-        return (int) (TOUCH.getX() / SCALE + CAMERA.getX());
+    public static Vector2 getScaledTouch() {
+        Vector2 division = TOUCH.dividedCopy(SCALE);
+        division.addVector2(CAMERA);
+        return division;
     }
 
-    public static int getScaledTouchY() {
-        return (int) (TOUCH.getY() / SCALE + CAMERA.getY());
+    private Vector2 getDisplayTouch() {
+        return TOUCH.dividedCopy(SCALE);
     }
 
     boolean checkIfOnScreen(int x, int y, int step) {

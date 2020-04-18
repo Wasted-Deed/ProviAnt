@@ -16,11 +16,11 @@ import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.environment.Meat;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
 import wastedgames.proviant.objects.fauna.Ant;
+import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.Larva;
 
 import static wastedgames.proviant.layouts.GameField.FLOOR_Y;
-import static wastedgames.proviant.layouts.GameField.getScaledTouchX;
-import static wastedgames.proviant.layouts.GameField.getScaledTouchY;
+import static wastedgames.proviant.layouts.GameField.getScaledTouch;
 
 public class UnitSolver {
     private final GameField GAMEFIELD;
@@ -36,7 +36,7 @@ public class UnitSolver {
     public void update() {
         for (int i = 0; i < MOVABLE_UNITS.size(); i++) {
             MovableUnit unit = MOVABLE_UNITS.get(i);
-            if (unit instanceof Ant && unit.getY() > FLOOR_Y) {
+            if ((unit instanceof Ant || unit instanceof Bug) && unit.getY() > FLOOR_Y) {
                 unit.setCurrentState(UnitState.CRAWL);
             }
             if (!GAMEFIELD.map.checkUnitCollide(unit.getLeftTop(),
@@ -64,7 +64,7 @@ public class UnitSolver {
 
         if (hero != null && GAMEFIELD.touchType == TouchType.NONE &&
                 hero.isPointReachable(unit.getX(), unit.getY()) &&
-                unit.isTouched(getScaledTouchX(), getScaledTouchY())) {
+                unit.isTouched(getScaledTouch())) {
             if (unit instanceof Portable) {
                 hero.setPickedObject((Portable) unit);
             } else if (unit instanceof ActiveUnit) {
