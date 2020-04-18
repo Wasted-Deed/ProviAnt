@@ -13,12 +13,12 @@ public class ActiveUnit extends MovableUnit {
 
     @Override
     public void update() {
-
+        isAttached = currentState == UnitState.CRAWL;
     }
 
     @Override
     public void move(AbstractUnit danger) {
-        if(danger == null){
+        if (danger == null) {
             return;
         }
         if (Math.abs(x - danger.getX()) < vision) {

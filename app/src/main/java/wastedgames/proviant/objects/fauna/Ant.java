@@ -13,6 +13,7 @@ public class Ant extends MovableUnit {
     public Ant(int x, int y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.ANT_WALK_0)));
+        appearance.put(UnitState.CRAWL, new Appearance(ResourcesLoader.getImage(Image.ANT_CRAWL_0)));
         appearance.put(UnitState.WORK,
                 new Appearance(ResourcesLoader.getBitmapSet(Image.ANT_WORK_0, Image.ANT_WORK_4),
                         0, 4));
@@ -28,13 +29,7 @@ public class Ant extends MovableUnit {
         hp = MAX_HP = 5;
     }
 
-    @Override
-    public void update() {
-
-    }
-
     public int getEfficiency() {
         return efficiency;
     }
-
 }

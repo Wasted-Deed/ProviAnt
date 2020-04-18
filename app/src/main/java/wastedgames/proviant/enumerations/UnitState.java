@@ -1,5 +1,5 @@
 package wastedgames.proviant.enumerations;
 
 public enum UnitState {
-    IDLE, WORK, WALK, EXIST
+    IDLE, WORK, WALK, EXIST, CRAWL
 }

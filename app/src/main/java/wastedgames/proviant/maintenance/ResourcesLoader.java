@@ -18,6 +18,8 @@ public class ResourcesLoader {
         bitmaps = new HashMap<>();
         Options options = new Options();
         options.inScaled = false;
+        bitmaps.put(Image.ANT_CRAWL_0, BitmapFactory.decodeResource(resources,
+                R.drawable.ant_crawl_0, options));
         bitmaps.put(Image.ANT_IDLE_0, BitmapFactory.decodeResource(resources,
                 R.drawable.ant_idle_0, options));
         bitmaps.put(Image.ANT_WORK_0, BitmapFactory.decodeResource(resources,

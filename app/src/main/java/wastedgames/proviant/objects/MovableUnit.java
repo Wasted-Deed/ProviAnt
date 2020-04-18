@@ -14,9 +14,11 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     protected int jumpSpeed;
     protected int vision;
     protected int damage;
-    private int currentJumpHeight;
-    private boolean isJumping;
+    protected boolean isAttached;
 
+    private int currentJumpHeight;
+    private int rotation;
+    private boolean isJumping;
 
     public MovableUnit(int x, int y) {
         super(x, y);
@@ -72,6 +74,11 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         pickedObject.setPickUp(true);
     }
 
+    @Override
+    public void update() {
+        setCurrentMask();
+    }
+
     public Portable getPickedObject() {
         return pickedObject;
     }
@@ -85,5 +92,9 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
 
     public int getDamage() {
         return damage;
+    }
+
+    public boolean isAttached() {
+        return isAttached;
     }
 }

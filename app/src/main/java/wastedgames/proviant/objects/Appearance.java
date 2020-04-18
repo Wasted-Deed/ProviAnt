@@ -32,6 +32,7 @@ public class Appearance {
             currentFrame++;
             currentFrame %= appearance.length;
         }
+
     }
 
     public void setUpdateFrequency(int updateFrequency) {

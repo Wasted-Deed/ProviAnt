@@ -9,8 +9,7 @@ import wastedgames.proviant.interfaces.Updatable;
 import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.DirtPile;
 
-import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN_HEIGHT;
-import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN_WIDTH;
+import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN;
 import static wastedgames.proviant.layouts.GameField.getScaledTouchX;
 import static wastedgames.proviant.layouts.GameField.getScaledTouchY;
 
@@ -83,9 +82,9 @@ public class TileMap implements Updatable {
 
     public void draw(Canvas canvas, Paint paint, Vector2 camera, boolean isBackground) {
         int startX = (int) (camera.getX() / TILE_SIZE);
-        int endX = startX + SCALED_SCREEN_WIDTH / TILE_SIZE + 1;
+        int endX = (int) (startX + SCALED_SCREEN.getX() / TILE_SIZE + 1);
         int startY = (int) (camera.getY() / TILE_SIZE);
-        int endY = startY + SCALED_SCREEN_HEIGHT / TILE_SIZE;
+        int endY = (int) (startY + SCALED_SCREEN.getY() / TILE_SIZE + 1);
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
                 if (!checkBounds(x, y)) {

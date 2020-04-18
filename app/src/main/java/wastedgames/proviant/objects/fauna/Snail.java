@@ -2,13 +2,11 @@ package wastedgames.proviant.objects.fauna;
 
 import android.graphics.Bitmap;
 
-import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
-import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.Appearance;
 import wastedgames.proviant.objects.CollisionMask;
 
@@ -25,13 +23,8 @@ public class Snail extends ActiveUnit {
                 maskBit.getWidth() / 2, 0);
         jumpSpeed = 2;
         speed = 0.5f;
-        vision = GameField.SCALED_SCREEN_WIDTH / 3;
+        vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
         hp = 3;
-    }
-
-    @Override
-    public void update() {
-
     }
 }

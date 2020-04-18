@@ -17,15 +17,9 @@ public class Bug extends ActiveUnit {
         setStandardMask(Image.BUG_0);
         jumpSpeed = 2;
         speed = 0.5f;
-        vision = GameField.SCALED_SCREEN_WIDTH / 3;
+        vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
         hp = 4;
     }
-
-    @Override
-    public void update() {
-
-    }
-
 
 }

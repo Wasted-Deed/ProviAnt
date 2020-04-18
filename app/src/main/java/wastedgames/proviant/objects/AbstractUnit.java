@@ -123,6 +123,13 @@ public abstract class AbstractUnit implements Updatable, Drawable {
 
     }
 
+    protected void setCurrentMask() {
+        Bitmap maskBit = getCurrentFrame();
+        mask = new CollisionMask(-maskBit.getWidth() / 2,
+                -maskBit.getHeight(),
+                maskBit.getWidth() / 2, 0);
+    }
+
     public UnitState getCurrentState() {
         return currentState;
     }
