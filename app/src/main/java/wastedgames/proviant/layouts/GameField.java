@@ -44,7 +44,7 @@ public class GameField {
     private final int CAMERA_Y_SETUP;
 
 
-    static final int FLOOR_Y = 97;
+    public static final int FLOOR_Y = 97;
     public static Vector2 SCALED_SCREEN;
     private static Vector2 CAMERA;
     private static int SCALE;
@@ -136,6 +136,9 @@ public class GameField {
             hero.move(new Vector2(hero.getSpeed(), 0));
         } else if (controller.getAngle() > 135 && controller.getAngle() < 225) {
             hero.move(new Vector2(-hero.getSpeed(), 0));
+        } else if (controller.getAngle() > 225 &&
+                controller.getAngle() < 315 && !hero.checkIfLandedOnBlock()) {
+            hero.move(new Vector2(0, hero.getSpeed()));
         } else {
             hero.setCurrentState(UnitState.IDLE);
             hero.setJumping(false);
@@ -171,6 +174,9 @@ public class GameField {
         if (hero.isPointReachable(getScaledTouch())) {
             Tile touched = MAP.getTouchedTile();
             if (touched == null || !touched.isSolid()) {
+                if (hero.getCurrentState() == UnitState.WORK) {
+                    hero.setCurrentState(UnitState.IDLE);
+                }
                 if (hero.getPickedObject() != null && hero.getPickedObject() instanceof BuildingUnit) {
                     MAP.fillTouchedTile();
                 }

@@ -2,6 +2,7 @@ package wastedgames.proviant.objects.fauna;
 
 import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
+import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
@@ -31,5 +32,10 @@ public class Ant extends MovableUnit {
 
     public int getEfficiency() {
         return efficiency;
+    }
+
+    @Override
+    public boolean checkIfLanded() {
+        return super.checkIfLanded() || checkIfCanAttach();
     }
 }

@@ -30,18 +30,33 @@ public class UnitSolver {
         this.GAMEFIELD = GAMEFIELD;
     }
 
+    private void setUnitToUnderground(MovableUnit unit) {
+        if ((unit instanceof Ant || unit instanceof Bug) && unit.getY() > FLOOR_Y) {
+            unit.setCurrentState(UnitState.CRAWL);
+        }
+    }
+
+    private void setUnitToPlatform(MovableUnit unit) {
+        if (!unit.checkIfCanAttach() &&
+                UnitState.getType(unit.getCurrentState()) == UnitState.Type.UNDERGROUND) {
+            unit.setY(FLOOR_Y);
+            unit.setAngle(0);
+            unit.setCurrentState(UnitState.IDLE);
+        }
+    }
+
+    private void setUnitToGravity(MovableUnit unit) {
+        if (!unit.checkIfLanded() && !unit.isAttached()) {
+            unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
+        }
+    }
+
     public void update() {
         for (int i = 0; i < MOVABLE_UNITS.size(); i++) {
             MovableUnit unit = MOVABLE_UNITS.get(i);
-            if ((unit instanceof Ant || unit instanceof Bug) && unit.getY() > FLOOR_Y) {
-                unit.setCurrentState(UnitState.CRAWL);
-            } else if (!UnitState.isFloor(unit.getCurrentState())) {
-                unit.setCurrentState(UnitState.IDLE);
-            }
-            if (!unit.checkIfLanded() && !unit.isAttached()) {
-                unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
-                continue;
-            }
+            setUnitToUnderground(unit);
+            setUnitToPlatform(unit);
+            setUnitToGravity(unit);
             unit.move(GAMEFIELD.hero);
             unit.update();
             checkUnit(unit);

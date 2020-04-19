@@ -1,6 +1,5 @@
 package wastedgames.proviant.objects.fauna;
 
-import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
@@ -30,5 +29,10 @@ public class ActiveUnit extends MovableUnit {
         }*/
         currentSpeed = 0;
         currentState = UnitState.IDLE;
+    }
+
+    @Override
+    public boolean checkIfLanded() {
+        return super.checkIfLanded() || checkIfCanAttach();
     }
 }

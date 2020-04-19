@@ -4,6 +4,7 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Movable;
 import wastedgames.proviant.interfaces.Portable;
+import wastedgames.proviant.layouts.GameField;
 
 public abstract class MovableUnit extends AbstractUnit implements Movable {
     Portable pickedObject;
@@ -86,6 +87,14 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
 
     public int getDamage() {
         return damage;
+    }
+
+    public boolean checkIfLandedOnBlock() {
+        return super.checkIfLanded();
+    }
+
+    public boolean checkIfCanAttach() {
+        return getY() >= GameField.FLOOR_Y;
     }
 
     public boolean isAttached() {
