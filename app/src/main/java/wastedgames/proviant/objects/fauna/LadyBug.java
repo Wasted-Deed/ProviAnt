@@ -8,7 +8,7 @@ import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
 
 public class LadyBug extends ActiveUnit {
-    public LadyBug(int x, int y) {
+    public LadyBug(float x, float y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.LADYBUG_0)));
         appearance.put(UnitState.WALK,

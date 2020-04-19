@@ -7,7 +7,7 @@ import wastedgames.proviant.objects.Appearance;
 import wastedgames.proviant.objects.PortableUnit;
 
 public class Meat extends PortableUnit {
-    public Meat(int x, int y) {
+    public Meat(float x, float y) {
         super(x, y);
         appearance.put(UnitState.EXIST,
                 new Appearance(ResourcesLoader.getImage(Image.MEAT_0)));

@@ -7,12 +7,13 @@ import wastedgames.proviant.objects.MovableUnit;
 
 public class ActiveUnit extends MovableUnit {
 
-    public ActiveUnit(int x, int y) {
+    public ActiveUnit(float x, float y) {
         super(x, y);
     }
 
     @Override
     public void update() {
+        super.update();
         isAttached = currentState == UnitState.CRAWL;
     }
 
@@ -21,12 +22,12 @@ public class ActiveUnit extends MovableUnit {
         if (danger == null || currentState == UnitState.CRAWL) {
             return;
         }
-        if (Math.abs(x - danger.getX()) < vision) {
+        /*if (Math.abs(x - danger.getX()) < vision) {
             currentState = UnitState.WALK;
             currentSpeed = danger.getX() > x ? -speed : speed;
             move(new Vector2(currentSpeed, 0));
             return;
-        }
+        }*/
         currentSpeed = 0;
         currentState = UnitState.IDLE;
     }

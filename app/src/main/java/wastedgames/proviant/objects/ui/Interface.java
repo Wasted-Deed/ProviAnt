@@ -35,12 +35,12 @@ public class Interface implements Drawable, Updatable {
     }
 
     @Override
-    public int getX() {
+    public float getX() {
         return 0;
     }
 
     @Override
-    public int getY() {
+    public float getY() {
         return 0;
     }
 
@@ -56,6 +56,7 @@ public class Interface implements Drawable, Updatable {
 
     @Override
     public void update() {
+        process.update();
         process.setX(holder.getX());
         process.setY(holder.getY() - STEP);
         hp.setCurrentHP(holder.getHp());

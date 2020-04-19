@@ -16,9 +16,4 @@ public class Chamomile extends AbstractUnit {
         setStandardMask(Image.CHAMOMILE_0);
         randomMirror();
     }
-
-    @Override
-    public void update() {
-
-    }
 }

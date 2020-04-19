@@ -6,9 +6,4 @@ public class InterfaceUnit extends AbstractUnit{
     public InterfaceUnit(Vector2 pos) {
         super(pos.getX(), pos.getY());
     }
-
-    @Override
-    public void update() {
-
-    }
 }

@@ -9,6 +9,7 @@ import wastedgames.proviant.objects.InterfaceUnit;
 
 public class HpBar extends InterfaceUnit {
     private int currentHP;
+
     public HpBar(Vector2 pos) {
         super(pos);
     }
@@ -18,8 +19,8 @@ public class HpBar extends InterfaceUnit {
         int color = paint.getColor();
         paint.setColor(Color.RED);
         for (int i = 0; i < currentHP; i++) {
-            int x1 = (int) (5 + camera.getX() + i * 10);
-            int y1 = (int) (camera.getY() + 5);
+            float x1 = 5 + camera.getX() + i * 10;
+            float y1 = camera.getY() + 5;
             canvas.drawOval(x1, y1, x1 + 5, y1 + 5, paint);
         }
         paint.setColor(color);

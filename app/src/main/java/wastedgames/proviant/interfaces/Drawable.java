@@ -8,9 +8,9 @@ import wastedgames.proviant.engine.Vector2;
 public interface Drawable {
     void draw(Canvas canvas, Paint paint, Vector2 camera);
 
-    int getX();
+    float getX();
 
-    int getY();
+    float getY();
 
     int getWidth();
 

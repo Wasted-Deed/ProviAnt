@@ -10,4 +10,8 @@ public enum UnitState {
     public static Type getType(UnitState state) {
         return state.ordinal() <= EXIST.ordinal() ? Type.FLOOR : Type.UNDERGROUND;
     }
+
+    public static boolean isFloor(UnitState state) {
+        return getType(state) == Type.FLOOR;
+    }
 }

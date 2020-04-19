@@ -26,6 +26,7 @@ import wastedgames.proviant.objects.fauna.Larva;
 import wastedgames.proviant.objects.fauna.Snail;
 import wastedgames.proviant.objects.landscape.Tile;
 import wastedgames.proviant.objects.landscape.TileMap;
+import wastedgames.proviant.objects.ui.Controller;
 import wastedgames.proviant.objects.ui.Interface;
 
 import static wastedgames.proviant.maintenance.ThreadSolver.IS_TOUCHING;
@@ -36,7 +37,7 @@ import static wastedgames.proviant.maintenance.ThreadSolver.TOUCH;
 public class GameField {
 
 
-    final TileMap map;
+    public static TileMap MAP;
     private final Vector2 REAL_SIZE;
     private final UnitSolver UNIT_SOLVER;
     private final Text text;
@@ -53,10 +54,10 @@ public class GameField {
     private Sun sun;
     private Interface heroInterface;
 
-    public GameField(int mapSizeX, int mapSizeY) {
-        REAL_SIZE = new Vector2(TileMap.TILE_SIZE * mapSizeX, TileMap.TILE_SIZE * mapSizeY);
+    public GameField(int MAPSizeX, int MAPSizeY) {
+        REAL_SIZE = new Vector2(TileMap.TILE_SIZE * MAPSizeX, TileMap.TILE_SIZE * MAPSizeY);
         text = new Text(Font.BASIC);
-        map = new TileMap(mapSizeX, mapSizeY);
+        MAP = new TileMap(MAPSizeX, MAPSizeY);
         UNIT_SOLVER = new UnitSolver(this);
         SCALE = 8;
         SCALED_SCREEN = new Vector2(SCREEN_WIDTH / SCALE, SCREEN_HEIGHT / SCALE);
@@ -123,34 +124,44 @@ public class GameField {
         sun.setX((int) CAMERA.getX() + 100);
         sun.setY((int) CAMERA.getY() + 70);
         sun.draw(canvas, paint, CAMERA);
-        map.draw(canvas, paint, CAMERA, true);
+        MAP.draw(canvas, paint, CAMERA, true);
         UNIT_SOLVER.draw(canvas, paint, CAMERA);
-        map.draw(canvas, paint, CAMERA, false);
+        MAP.draw(canvas, paint, CAMERA, false);
         heroInterface.draw(canvas, paint, CAMERA);
     }
 
-    private boolean heroMovement() {
-        double step = 0.1;
+    private void heroPlatformMovement(Controller controller) {
         hero.setCurrentState(UnitState.WALK);
-        if (TOUCH.getX() < SCREEN_WIDTH * step) {
-            if (!map.checkUnitCollide(hero.getLeftTop(), hero.getRightBottom(), -1, 0)) {
-                hero.move(new Vector2(-hero.getSpeed(), 0));
-            }
-        } else if (TOUCH.getX() > SCREEN_WIDTH * (1 - step)) {
-            if (!map.checkUnitCollide(hero.getLeftTop(), hero.getRightBottom(), 1, 0)) {
-                hero.move(new Vector2(hero.getSpeed(), 0));
-            }
+        if (controller.getAngle() > 315 || controller.getAngle() < 45) {
+            hero.move(new Vector2(hero.getSpeed(), 0));
+        } else if (controller.getAngle() > 135 && controller.getAngle() < 225) {
+            hero.move(new Vector2(-hero.getSpeed(), 0));
         } else {
             hero.setCurrentState(UnitState.IDLE);
             hero.setJumping(false);
-            return false;
         }
-        return true;
+    }
+
+    private void heroUndergroundMovement(Controller controller) {
+        Vector2 dir = controller.touchBias(getDisplayTouch()).getNormalizedCopy();
+        dir.multiplyVector(hero.getSpeed());
+        hero.setDir(dir);
+        if (!hero.checkDirCollision()) {
+            hero.move(dir);
+        }
     }
 
     private void doWhileTouching() {
-        heroInterface.getController().updateCenterPosition(getDisplayTouch());
-        if (heroMovement()) {
+        Controller controller = heroInterface.getController();
+        controller.updateCenterPosition(getDisplayTouch());
+        if (controller.isControlled()) {
+            if (UnitState.isFloor(hero.getCurrentState())) {
+                hero.setAngle(0);
+                heroPlatformMovement(controller);
+            } else {
+                hero.setAngle(controller.getAngle());
+                heroUndergroundMovement(controller);
+            }
             return;
         }
         terraform();
@@ -158,14 +169,14 @@ public class GameField {
 
     private void terraform() {
         if (hero.isPointReachable(getScaledTouch())) {
-            Tile touched = map.getTouchedTile();
+            Tile touched = MAP.getTouchedTile();
             if (touched == null || !touched.isSolid()) {
                 if (hero.getPickedObject() != null && hero.getPickedObject() instanceof BuildingUnit) {
-                    map.fillTouchedTile();
+                    MAP.fillTouchedTile();
                 }
                 return;
             }
-            PortableUnit drop = map.damageTouchedTile(hero.getEfficiency());
+            PortableUnit drop = MAP.damageTouchedTile(hero.getEfficiency());
             hero.setCurrentState(UnitState.WORK);
             if (drop != null) {
                 UNIT_SOLVER.addBoth(drop);
@@ -177,7 +188,7 @@ public class GameField {
         attachCamera(hero.getX(), hero.getY());
     }
 
-    private void attachCamera(int x, int y) {
+    private void attachCamera(float x, float y) {
         if (x > SCALED_SCREEN.getX() / 2 &&
                 x < REAL_SIZE.getX() - SCALED_SCREEN.getX()) {
             CAMERA.setX(x - SCALED_SCREEN.getX() / 2);
@@ -240,7 +251,7 @@ public class GameField {
         return TOUCH.dividedCopy(SCALE);
     }
 
-    boolean checkIfOnScreen(int x, int y, int step) {
+    boolean checkIfOnScreen(float x, float y, int step) {
         return Math.abs(x - CAMERA.getX() - SCALED_SCREEN.getX() / 2f)
                 < SCALED_SCREEN.getX() / 2f + step &&
                 Math.abs(y - CAMERA.getY() - SCALED_SCREEN.getY() / 2f)

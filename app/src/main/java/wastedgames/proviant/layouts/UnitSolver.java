@@ -6,10 +6,8 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 
 import wastedgames.proviant.engine.Vector2;
-import wastedgames.proviant.enumerations.TouchType;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
-import wastedgames.proviant.interfaces.Portable;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
@@ -20,7 +18,6 @@ import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.Larva;
 
 import static wastedgames.proviant.layouts.GameField.FLOOR_Y;
-import static wastedgames.proviant.layouts.GameField.getScaledTouch;
 
 public class UnitSolver {
     private final GameField GAMEFIELD;
@@ -38,9 +35,10 @@ public class UnitSolver {
             MovableUnit unit = MOVABLE_UNITS.get(i);
             if ((unit instanceof Ant || unit instanceof Bug) && unit.getY() > FLOOR_Y) {
                 unit.setCurrentState(UnitState.CRAWL);
+            } else if (!UnitState.isFloor(unit.getCurrentState())) {
+                unit.setCurrentState(UnitState.IDLE);
             }
-            if (!GAMEFIELD.map.checkUnitCollide(unit.getLeftTop(),
-                    unit.getRightBottom(), 0, 1) && !unit.isAttached()) {
+            if (!unit.checkIfLanded() && !unit.isAttached()) {
                 unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
                 continue;
             }
@@ -61,8 +59,7 @@ public class UnitSolver {
 
     private void checkUnit(MovableUnit unit) {
         Ant hero = GAMEFIELD.hero;
-
-        if (hero != null && GAMEFIELD.touchType == TouchType.NONE &&
+        /*if (hero != null && GAMEFIELD.touchType == TouchType.NONE &&
                 hero.isPointReachable(unit.getX(), unit.getY()) &&
                 unit.isTouched(getScaledTouch())) {
             if (unit instanceof Portable) {
@@ -70,7 +67,7 @@ public class UnitSolver {
             } else if (unit instanceof ActiveUnit) {
                 unit.damage(hero.getDamage());
             }
-        }
+        }*/
         if (unit instanceof Larva) {
             GAMEFIELD.larvaAction((Larva) unit);
         }

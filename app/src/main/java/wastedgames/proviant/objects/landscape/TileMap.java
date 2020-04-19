@@ -148,7 +148,7 @@ public class TileMap implements Updatable {
     private void setTileEnvironment(int x, int y) {
         if (checkBounds(x, y - 1) && checkBounds(x, y)) {
             if (map[x][y - 1].getType() == TileType.GRASS) {
-                map[x][y - 1] = null;
+                map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
             }
         }
     }
@@ -161,7 +161,13 @@ public class TileMap implements Updatable {
         return (int) (getScaledTouch().getY() / TILE_SIZE);
     }
 
-    public boolean checkUnitCollide(Vector2 leftTop, Vector2 rightBottom, int dirX, int dirY) {
+    public boolean checkPointCollision(Vector2 point) {
+        int x = (int) (point.getX() / TILE_SIZE);
+        int y = (int) (point.getY() / TILE_SIZE);
+        return !checkBounds(x, y) || map[x][y].isSolid;
+    }
+
+    /*public boolean checkUnitCollide(Vector2 leftTop, Vector2 rightBottom, int dirX, int dirY) {
         int startX = (int) (leftTop.getX() / TILE_SIZE);
         int startY = (int) (leftTop.getY() / TILE_SIZE);
         int endX = (int) (rightBottom.getX() / TILE_SIZE);
@@ -177,7 +183,7 @@ public class TileMap implements Updatable {
             }
         }
         return false;
-    }
+    }*/
 
     @Override
     public void update() {

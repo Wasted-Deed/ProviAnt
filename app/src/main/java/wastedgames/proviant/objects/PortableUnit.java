@@ -6,15 +6,15 @@ public class PortableUnit extends MovableUnit implements Portable {
     private AbstractUnit holder;
     private boolean isPicked;
 
-    public PortableUnit(int x, int y) {
+    public PortableUnit(float x, float y) {
         super(x, y);
     }
 
     @Override
     public void update() {
+        super.update();
         if (isPicked) {
-            this.x = holder.getX();
-            this.y = holder.getY();
+            pos.setCoordinates(holder.getPos());
         }
     }
 

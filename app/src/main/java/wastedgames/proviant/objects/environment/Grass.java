@@ -15,9 +15,4 @@ public class Grass extends AbstractUnit {
         currentState = UnitState.EXIST;
         setStandardMask(Image.GRASS_0);
     }
-
-    @Override
-    public void update() {
-
-    }
 }

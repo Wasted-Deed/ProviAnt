@@ -16,9 +16,4 @@ public class Rose extends AbstractUnit {
         setStandardMask(Image.ROSE_0);
         randomMirror();
     }
-
-    @Override
-    public void update() {
-
-    }
 }

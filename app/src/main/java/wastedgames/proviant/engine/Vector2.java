@@ -23,18 +23,30 @@ public class Vector2 {
         this.y += y;
     }
 
-    public void multiplyVector(float x, float y) {
-        this.x *= x;
-        this.y *= y;
+    public void multiplyVector(float scalar) {
+        this.x *= scalar;
+        this.y *= scalar;
     }
 
     public void setLength(float length) {
-        float coefficient = length / getLength();
-        multiplyVector(coefficient, coefficient);
+        multiplyVector(length / getLength());
+    }
+
+    public Vector2 getNormalizedCopy() {
+        Vector2 res = new Vector2(this);
+        res.setLength(1);
+        return res;
     }
 
     public void subtractVector2(Vector2 toSubtract) {
         addVector2(-toSubtract.getX(), -toSubtract.getY());
+    }
+
+    public void rotate(int angle) {
+        float radAngle = (float) (angle * Math.PI / 180);
+        float cos = (float) Math.cos(radAngle);
+        float sin = (float) Math.sin(radAngle);
+        this.setCoordinates(x * cos + y * sin, -x * sin + y * cos);
     }
 
     public Vector2 addedCopy(Vector2 toAdd) {

@@ -8,7 +8,7 @@ import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
 
 public class Bug extends ActiveUnit {
-    public Bug(int x, int y) {
+    public Bug(float x, float y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.BUG_0)));
         appearance.put(UnitState.CRAWL, new Appearance(ResourcesLoader.getImage(Image.BUG_CRAWL_0)));

@@ -1,6 +1,7 @@
 package wastedgames.proviant.objects;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Movable;
 import wastedgames.proviant.interfaces.Portable;
 
@@ -17,10 +18,9 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     protected boolean isAttached;
 
     private int currentJumpHeight;
-    private int rotation;
     private boolean isJumping;
 
-    public MovableUnit(int x, int y) {
+    public MovableUnit(float x, float y) {
         super(x, y);
         isJumping = false;
         currentJumpHeight = 0;
@@ -28,7 +28,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     }
 
     private void jump() {
-        y -= jumpSpeed;
+        pos.addVector2(0, -jumpSpeed);
         currentJumpHeight += jumpSpeed;
         if (currentJumpHeight >= MAX_JUMP_HEIGHT) {
             setJumping(false);
@@ -44,8 +44,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
             return;
         }
         currentSpeed = direction.getX();
-        x += direction.getX();
-        y += direction.getY();
+        pos.addVector2(direction);
     }
 
     @Override
@@ -74,11 +73,6 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         pickedObject.setPickUp(true);
     }
 
-    @Override
-    public void update() {
-        setCurrentMask();
-    }
-
     public Portable getPickedObject() {
         return pickedObject;
     }
@@ -95,6 +89,6 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     }
 
     public boolean isAttached() {
-        return isAttached;
+        return isAttached || !UnitState.isFloor(getCurrentState());
     }
 }
