@@ -7,15 +7,20 @@ import java.util.ArrayList;
 
 import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.UnitState;
+import wastedgames.proviant.enumerations.Weather;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.maintenance.Physics;
+import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
+import wastedgames.proviant.objects.environment.DirtPile;
+import wastedgames.proviant.objects.environment.Drop;
 import wastedgames.proviant.objects.environment.Meat;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.Larva;
+import wastedgames.proviant.objects.landscape.Dirt;
 
 import static wastedgames.proviant.layouts.GameField.FLOOR_Y;
 
@@ -48,6 +53,8 @@ public class UnitSolver {
     private void setUnitToGravity(MovableUnit unit) {
         if (!unit.checkIfLanded() && !unit.isAttached()) {
             unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
+        } else if(unit instanceof Drop && unit.getCurrentState() != UnitState.DESTROYED) {
+            unit.damage(1);
         }
     }
 
@@ -60,7 +67,11 @@ public class UnitSolver {
             unit.move(GAMEFIELD.hero);
             unit.update();
             checkUnit(unit);
+            if (unit.isDestroyed()) {
+                removeBoth(unit);
+            }
         }
+        checkWeather();
     }
 
     public void draw(Canvas canvas, Paint paint, Vector2 CAMERA) {
@@ -68,6 +79,15 @@ public class UnitSolver {
             if (GAMEFIELD.checkIfOnScreen(unit.getX(), unit.getY(),
                     Math.max(unit.getWidth(), unit.getHeight()))) {
                 unit.draw(canvas, paint, CAMERA);
+            }
+        }
+    }
+
+    private void checkWeather() {
+        if (GAMEFIELD.weather == Weather.RAIN) {
+            if (ThreadSolver.CURRENT_FRAME % 4 == 0) {
+                addBoth(new Drop((float) (Math.random() * GAMEFIELD.REAL_SIZE.getX()),
+                        0));
             }
         }
     }
@@ -89,7 +109,7 @@ public class UnitSolver {
         if (unit instanceof ActiveUnit && unit.isDestroyed()) {
             Meat meat = new Meat(unit.getX(), unit.getY());
             addBoth(meat);
-            removeBoth(unit);
+            unit.destroy();
         }
     }
 

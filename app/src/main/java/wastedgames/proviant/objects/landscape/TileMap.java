@@ -143,12 +143,23 @@ public class TileMap implements Updatable {
     private void destroyDirtTile(int x, int y) {
         map[x][y] = new DirtBack(x, y, TILE_SIZE);
         setTileEnvironment(x, y);
+        setTileEnvironment(x, y - 1);
+        setTileEnvironment(x, y + 1);
+        setTileEnvironment(x - 1, y);
+        setTileEnvironment(x + 1, y);
     }
 
     private void setTileEnvironment(int x, int y) {
         if (checkBounds(x, y - 1) && checkBounds(x, y)) {
             if (map[x][y - 1].getType() == TileType.GRASS) {
                 map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
+            }
+        }
+        if (checkBounds(x, y) && checkBounds(x, y - 1) && checkBounds(x, y + 1) &&
+                checkBounds(x - 1, y) && checkBounds(x + 1, y)) {
+            if (map[x][y].isSolid() && !map[x][y + 1].isSolid() && !map[x][y - 1].isSolid() &&
+                    (!map[x - 1][y].isSolid() || !map[x + 1][y].isSolid())) {
+                destroyDirtTile(x, y);
             }
         }
     }

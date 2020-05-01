@@ -174,6 +174,36 @@ public class ResourcesLoader {
                 R.drawable.larva_2, options));
         bitmaps.put(Image.LARVA_5, BitmapFactory.decodeResource(resources,
                 R.drawable.larva_1, options));
+        bitmaps.put(Image.DROP_FLY_0, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_fly_0, options));
+        bitmaps.put(Image.DROP_FLY_1, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_fly_1, options));
+        bitmaps.put(Image.DROP_FLY_2, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_fly_2, options));
+        bitmaps.put(Image.DROP_LANDED_0, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_landed_0, options));
+        bitmaps.put(Image.DROP_LANDED_1, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_landed_1, options));
+        bitmaps.put(Image.DROP_LANDED_2, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_landed_2, options));
+        bitmaps.put(Image.DROP_LANDED_3, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_landed_3, options));
+        bitmaps.put(Image.DROP_LANDED_4, BitmapFactory.decodeResource(resources,
+                R.drawable.drop_landed_3, options));
+        bitmaps.put(Image.WORM_IDLE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_idle_0, options));
+        bitmaps.put(Image.WORM_MOVE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_move_0, options));
+        bitmaps.put(Image.WORM_MOVE_1, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_move_1, options));
+        bitmaps.put(Image.WORM_MOVE_2, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_move_2, options));
+        bitmaps.put(Image.WORM_MOVE_3, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_move_3, options));
+        bitmaps.put(Image.WORM_MOVE_4, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_move_4, options));
+        bitmaps.put(Image.WORM_MOVE_5, BitmapFactory.decodeResource(resources,
+                R.drawable.worm_move_5, options));
         BASIC_FONT = BitmapFactory.decodeResource(resources, R.drawable.font_0, options);
 
     }

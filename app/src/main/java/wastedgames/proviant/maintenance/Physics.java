@@ -1,7 +1,7 @@
 package wastedgames.proviant.maintenance;
 
 public class Physics {
-    public static final int GRAVITY_SPEED = 2;
+    public static final int GRAVITY_SPEED = 4;
 
     public static final int DIRT_DURABILITY = 5;
 

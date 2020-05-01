@@ -1,7 +1,7 @@
 package wastedgames.proviant.enumerations;
 
 public enum UnitState {
-    IDLE, WORK, WALK, EXIST, CRAWL;
+    IDLE, WORK, WALK, EXIST, CRAWL, DESTROYED;
 
     public enum Type {
         FLOOR, UNDERGROUND

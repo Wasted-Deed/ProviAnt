@@ -20,9 +20,11 @@ public class Appearance {
     public Appearance(Bitmap appearance) {
         this(new Bitmap[]{appearance}, 0, 0);
     }
-    public Appearance(){
+
+    public Appearance() {
         this(new Bitmap[0], 0, 0);
     }
+
     public void updateAppearance() {
         if (isStatic) {
             currentFrame = 0;
@@ -41,5 +43,16 @@ public class Appearance {
 
     public Bitmap getCurrentFrame() {
         return appearance[currentFrame];
+    }
+
+    public int getCurrentNumber() {
+        return currentFrame;
+    }
+
+    public int getMaxNumber() {
+        return appearance.length - 1;
+    }
+    public boolean isFinalNumber() {
+        return getCurrentNumber() >= getMaxNumber();
     }
 }

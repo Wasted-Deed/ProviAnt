@@ -26,6 +26,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         isJumping = false;
         currentJumpHeight = 0;
         currentSpeed = 0;
+        hp = 1;
     }
 
     private void jump() {

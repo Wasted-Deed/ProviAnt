@@ -191,6 +191,10 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         hp -= damage;
     }
 
+    public void destroy() {
+        hp = 0;
+    }
+
     public boolean isDestroyed() {
         return hp <= 0;
     }

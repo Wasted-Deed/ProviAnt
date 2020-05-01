@@ -9,6 +9,7 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.Font;
 import wastedgames.proviant.enumerations.TouchType;
 import wastedgames.proviant.enumerations.UnitState;
+import wastedgames.proviant.enumerations.Weather;
 import wastedgames.proviant.maintenance.Text;
 import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
@@ -24,6 +25,7 @@ import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.LadyBug;
 import wastedgames.proviant.objects.fauna.Larva;
 import wastedgames.proviant.objects.fauna.Snail;
+import wastedgames.proviant.objects.fauna.Worm;
 import wastedgames.proviant.objects.landscape.Tile;
 import wastedgames.proviant.objects.landscape.TileMap;
 import wastedgames.proviant.objects.ui.Controller;
@@ -38,7 +40,7 @@ public class GameField {
 
 
     public static TileMap MAP;
-    private final Vector2 REAL_SIZE;
+    final Vector2 REAL_SIZE;
     private final UnitSolver UNIT_SOLVER;
     private final Text text;
     private final int CAMERA_Y_SETUP;
@@ -51,6 +53,7 @@ public class GameField {
 
     Ant hero;
     TouchType touchType;
+    Weather weather;
     private Sun sun;
     private Interface heroInterface;
 
@@ -68,6 +71,7 @@ public class GameField {
         addUnits();
         setupHero();
         touchType = TouchType.NONE;
+        weather = Weather.NORMAL;
     }
 
     private void setupHero() {
@@ -101,9 +105,11 @@ public class GameField {
 
     private void addUnits() {
         for (int i = 0; i < 10; i++) {
-            Snail s = new Snail((int) (Math.random() * REAL_SIZE.getX()), 30);
-            Bug b = new Bug((int) (Math.random() * REAL_SIZE.getX()), 30);
-            LadyBug lb = new LadyBug((int) (Math.random() * REAL_SIZE.getX()), 30);
+            Snail s = new Snail((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
+            Bug b = new Bug((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
+            LadyBug lb = new LadyBug((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
+            Worm w = new Worm((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
+            UNIT_SOLVER.addBoth(w);
             UNIT_SOLVER.addBoth(s);
             UNIT_SOLVER.addBoth(b);
             UNIT_SOLVER.addBoth(lb);
