@@ -17,7 +17,7 @@ public class Bug extends ActiveUnit {
                         0, 8));
         setStandardMask(Image.BUG_0);
         jumpSpeed = 2;
-        speed = 0.5f;
+        speed = 0.8f;
         vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
         hp = 4;

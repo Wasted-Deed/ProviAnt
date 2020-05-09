@@ -11,6 +11,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
 
     protected int MAX_JUMP_HEIGHT;
 
+    protected Vector2 aim;
     protected float speed;
     protected float currentSpeed;
     protected int jumpSpeed;
@@ -27,6 +28,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         currentJumpHeight = 0;
         currentSpeed = 0;
         hp = 1;
+        aim = new Vector2(x, y);
     }
 
     private void jump() {
@@ -50,8 +52,15 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     }
 
     @Override
-    public void move(AbstractUnit danger) {
+    public void update() {
+        super.update();
+        if (!hasCome()) {
+            move(new Vector2(aim.getX() > pos.getX() ? speed : -speed, 0));
+        }
+    }
 
+    public boolean hasCome() {
+        return Vector2.getDistance(aim, pos) < speed;
     }
 
     public float getSpeed() {
@@ -100,5 +109,9 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
 
     public boolean isAttached() {
         return isAttached || !UnitState.isFloor(getCurrentState());
+    }
+
+    public void setAim(float x, float y) {
+        aim.setCoordinates(x, y);
     }
 }

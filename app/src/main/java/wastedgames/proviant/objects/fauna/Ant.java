@@ -10,7 +10,7 @@ import wastedgames.proviant.objects.MovableUnit;
 
 public class Ant extends MovableUnit {
     private int efficiency;
-
+    //TODO: Handle unexpected hops of bitmap in CRAWL state
     public Ant(float x, float y) {
         super(x, y);
         appearance.put(UnitState.IDLE, new Appearance(ResourcesLoader.getImage(Image.ANT_WALK_0)));

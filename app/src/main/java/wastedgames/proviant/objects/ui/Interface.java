@@ -4,9 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.Font;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Updatable;
+import wastedgames.proviant.maintenance.Text;
 import wastedgames.proviant.objects.AbstractUnit;
 
 public class Interface implements Drawable, Updatable {
@@ -17,12 +19,14 @@ public class Interface implements Drawable, Updatable {
     private HpBar hp;
     private ProcessingBar process;
     private Controller controller;
+    private Text text;
 
     public Interface(AbstractUnit holder) {
         this.holder = holder;
         hp = new HpBar(new Vector2(0, 0));
         controller = new Controller(new Vector2(0, 0));
         process = new ProcessingBar(new Vector2(holder.getX(), holder.getY() - STEP));
+        text = new Text(Font.BASIC);
     }
 
     @Override

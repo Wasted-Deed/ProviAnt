@@ -42,7 +42,7 @@ public class GameField {
     public static TileMap MAP;
     final Vector2 REAL_SIZE;
     private final UnitSolver UNIT_SOLVER;
-    private final Text text;
+    private final EnvironmentSolver ENV_SOLVER;
     private final int CAMERA_Y_SETUP;
 
 
@@ -57,18 +57,19 @@ public class GameField {
     private Sun sun;
     private Interface heroInterface;
 
+    //TODO: Make it invisible the land / underground for a unit
     public GameField(int MAPSizeX, int MAPSizeY) {
         REAL_SIZE = new Vector2(TileMap.TILE_SIZE * MAPSizeX, TileMap.TILE_SIZE * MAPSizeY);
-        text = new Text(Font.BASIC);
         MAP = new TileMap(MAPSizeX, MAPSizeY);
         UNIT_SOLVER = new UnitSolver(this);
+        ENV_SOLVER = new EnvironmentSolver();
         SCALE = 8;
         SCALED_SCREEN = new Vector2(SCREEN_WIDTH / SCALE, SCREEN_HEIGHT / SCALE);
         CAMERA = new Vector2(0, 0);
         CAMERA_Y_SETUP = (int) (FLOOR_Y - SCALED_SCREEN.getY() / 2);
         sun = new Sun(10, 30);
-        addEnvironment();
-        addUnits();
+        ENV_SOLVER.addEnvironment(UNIT_SOLVER, REAL_SIZE);
+        ENV_SOLVER.addUnits(UNIT_SOLVER, REAL_SIZE);
         setupHero();
         touchType = TouchType.NONE;
         weather = Weather.NORMAL;
@@ -82,39 +83,6 @@ public class GameField {
         heroInterface = new Interface(larva);
     }
 
-    private void addEnvironment() {
-        for (int i = 0; i <= 10; i++) {
-            BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, FLOOR_Y);
-            UNIT_SOLVER.addDrawableUnit(backgroundGrass);
-        }
-        for (int i = 0; i < 50; i++) {
-            Grass grass = new Grass((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            Stick stick = new Stick((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            Stone stone = new Stone((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            UNIT_SOLVER.addBoth(stick);
-            UNIT_SOLVER.addBoth(stone);
-            UNIT_SOLVER.addDrawableUnit(grass);
-            if (i % 4 == 0) {
-                Chamomile chamomile = new Chamomile((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-                Rose rose = new Rose((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-                UNIT_SOLVER.addDrawableUnit(chamomile);
-                UNIT_SOLVER.addDrawableUnit(rose);
-            }
-        }
-    }
-
-    private void addUnits() {
-        for (int i = 0; i < 10; i++) {
-            Snail s = new Snail((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            Bug b = new Bug((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            LadyBug lb = new LadyBug((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            Worm w = new Worm((int) (Math.random() * REAL_SIZE.getX()), FLOOR_Y);
-            UNIT_SOLVER.addBoth(w);
-            UNIT_SOLVER.addBoth(s);
-            UNIT_SOLVER.addBoth(b);
-            UNIT_SOLVER.addBoth(lb);
-        }
-    }
 
     private void drawSky(Canvas canvas, Paint paint) {
         paint.setColor(Color.CYAN);
@@ -160,6 +128,7 @@ public class GameField {
         }
     }
 
+    //TODO: Here might be the problem (jump from 0 to 359)
     private void doWhileTouching() {
         Controller controller = heroInterface.getController();
         controller.updateCenterPosition(getDisplayTouch());
@@ -224,6 +193,7 @@ public class GameField {
             heroInterface.getController().setToInitialPosition();
         }
         attachCamera();
+        hero.setAim(hero.getX(), hero.getY());
     }
 
     public void update() {

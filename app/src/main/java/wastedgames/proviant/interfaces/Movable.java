@@ -7,7 +7,5 @@ public interface Movable {
 
     void move(Vector2 direction);
 
-    void move(AbstractUnit danger);
-
     float getCurrentSpeed();
 }

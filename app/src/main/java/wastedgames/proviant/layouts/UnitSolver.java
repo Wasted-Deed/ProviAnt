@@ -13,14 +13,12 @@ import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
-import wastedgames.proviant.objects.environment.DirtPile;
 import wastedgames.proviant.objects.environment.Drop;
 import wastedgames.proviant.objects.environment.Meat;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.Larva;
-import wastedgames.proviant.objects.landscape.Dirt;
 
 import static wastedgames.proviant.layouts.GameField.FLOOR_Y;
 
@@ -53,7 +51,7 @@ public class UnitSolver {
     private void setUnitToGravity(MovableUnit unit) {
         if (!unit.checkIfLanded() && !unit.isAttached()) {
             unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
-        } else if(unit instanceof Drop && unit.getCurrentState() != UnitState.DESTROYED) {
+        } else if (unit instanceof Drop && unit.getCurrentState() != UnitState.DESTROYED) {
             unit.damage(1);
         }
     }
@@ -64,7 +62,6 @@ public class UnitSolver {
             setUnitToUnderground(unit);
             setUnitToPlatform(unit);
             setUnitToGravity(unit);
-            unit.move(GAMEFIELD.hero);
             unit.update();
             checkUnit(unit);
             if (unit.isDestroyed()) {
@@ -86,8 +83,7 @@ public class UnitSolver {
     private void checkWeather() {
         if (GAMEFIELD.weather == Weather.RAIN) {
             if (ThreadSolver.CURRENT_FRAME % 4 == 0) {
-                addBoth(new Drop((float) (Math.random() * GAMEFIELD.REAL_SIZE.getX()),
-                        0));
+                addBoth(new Drop((float) (Math.random() * GAMEFIELD.REAL_SIZE.getX()), 0));
             }
         }
     }

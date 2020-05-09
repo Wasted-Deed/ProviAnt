@@ -3,6 +3,8 @@ package wastedgames.proviant.objects.landscape;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import java.util.Stack;
+
 import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.TileType;
 import wastedgames.proviant.interfaces.Updatable;
@@ -16,6 +18,7 @@ public class TileMap implements Updatable {
     public final static int TILE_SIZE = 8;
     private final int MAX_CAVE_SIZE = 40;
     private final int FLOOR_START = 11;
+    private final int MAX_DURATION = 3;
     private Tile[][] map;
     private int sizeX;
     private int sizeY;
@@ -142,6 +145,20 @@ public class TileMap implements Updatable {
 
     private void destroyDirtTile(int x, int y) {
         map[x][y] = new DirtBack(x, y, TILE_SIZE);
+        handleTilesAround(x, y);
+    }
+
+    private void setTileEnvironment(int x, int y) {
+        if (checkBounds(x, y - 1) && checkBounds(x, y)) {
+            if (map[x][y - 1].getType() == TileType.GRASS
+                    && !map[x][y].isSolid()) {
+                map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
+            }
+        }
+        destroyUnstableTiles(x, y);
+    }
+
+    private void handleTilesAround(int x, int y) {
         setTileEnvironment(x, y);
         setTileEnvironment(x, y - 1);
         setTileEnvironment(x, y + 1);
@@ -149,19 +166,42 @@ public class TileMap implements Updatable {
         setTileEnvironment(x + 1, y);
     }
 
-    private void setTileEnvironment(int x, int y) {
-        if (checkBounds(x, y - 1) && checkBounds(x, y)) {
-            if (map[x][y - 1].getType() == TileType.GRASS) {
-                map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
+    private boolean checkTilesAround(int x, int y) {
+        return checkBounds(x, y) && checkBounds(x, y - 1) && checkBounds(x, y + 1) &&
+                checkBounds(x - 1, y) && checkBounds(x + 1, y);
+    }
+
+    //TODO: Make it work properly
+    private int destroySideHeft(int x, int y, int dir, int count, Stack<Vector2> tiles) {
+        if (!checkTilesAround(x, y)) {
+            return count;
+        }
+        boolean isClear = !map[x][y + 1].isSolid() && !map[x][y - 1].isSolid();
+        boolean isCurrentSolid = map[x][y].isSolid();
+        if (isClear && isCurrentSolid && (!map[x + 1][y].isSolid() || !map[x - 1][y].isSolid())) {
+            destroyDirtTile(x, y);
+        }
+        /*if (isClear && map[x][y].isSolid()) {
+            tiles.push(new Vector2(x, y));
+            if (map[x + dir][y].isSolid()) {
+                destroySideHeft(x + dir, y, dir, count + 1, tiles);
             }
         }
-        if (checkBounds(x, y) && checkBounds(x, y - 1) && checkBounds(x, y + 1) &&
-                checkBounds(x - 1, y) && checkBounds(x + 1, y)) {
-            if (map[x][y].isSolid() && !map[x][y + 1].isSolid() && !map[x][y - 1].isSolid() &&
-                    (!map[x - 1][y].isSolid() || !map[x + 1][y].isSolid())) {
-                destroyDirtTile(x, y);
+        if (!map[x][y].isSolid() && count >= MAX_DURATION) {
+            while (!tiles.empty()) {
+                Vector2 pos = tiles.pop();
+                int x1 = (int) pos.getX();
+                int y1 = (int) pos.getY();
+                destroyDirtTile(x1, y1);
             }
-        }
+        }*/
+        return count;
+    }
+
+    private void destroyUnstableTiles(int x, int y) {
+        Stack<Vector2> tiles = new Stack<>();
+        int count = destroySideHeft(x, y, 1, 0, tiles);
+        //destroySideHeft(x, y, -1, count, tiles);
     }
 
     public int getTouchedTileX() {

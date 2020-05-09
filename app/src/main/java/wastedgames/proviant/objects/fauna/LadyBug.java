@@ -16,7 +16,7 @@ public class LadyBug extends ActiveUnit {
                         0, 8));
         setStandardMask(Image.LADYBUG_0);
         jumpSpeed = 2;
-        speed = 0.5f;
+        speed = 0.7f;
         vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
         hp = 4;
