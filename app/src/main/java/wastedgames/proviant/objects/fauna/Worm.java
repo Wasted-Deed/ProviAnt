@@ -16,7 +16,7 @@ public class Worm extends ActiveUnit {
                         0, 8));
         setStandardMask(Image.WORM_IDLE_0);
         jumpSpeed = 2;
-        speed = 0.4f;
+        speed = 0.5f;
         vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         hp = 4;
     }

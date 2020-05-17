@@ -72,22 +72,46 @@ public class ResourcesLoader {
                 R.drawable.meat_0, options));
         bitmaps.put(Image.MEAT_1, BitmapFactory.decodeResource(resources,
                 R.drawable.meat_1, options));
+        bitmaps.put(Image.TILE_DIRT_0_0, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_0, options));
+        bitmaps.put(Image.TILE_DIRT_0_1, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_1, options));
+        bitmaps.put(Image.TILE_DIRT_0_2, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_2, options));
+        bitmaps.put(Image.TILE_DIRT_0_3, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_3, options));
+        bitmaps.put(Image.TILE_DIRT_0_4, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_4, options));
+        bitmaps.put(Image.TILE_DIRT_0_5, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_6, options));
+        bitmaps.put(Image.TILE_DIRT_0_6, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_6, options));
+        bitmaps.put(Image.TILE_DIRT_0_7, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_0_7, options));
         bitmaps.put(Image.TILE_DIRT_0, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_dirt_0, options));
         bitmaps.put(Image.TILE_DIRT_1, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_dirt_1, options));
         bitmaps.put(Image.TILE_DIRT_2, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_dirt_2, options));
-        bitmaps.put(Image.TILE_DIRT_3, BitmapFactory.decodeResource(resources,
-                R.drawable.tile_dirt_3, options));
+        bitmaps.put(Image.TILE_DIRT_BACK, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_back, options));
+        bitmaps.put(Image.TILE_DIRT_BACK_0, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_back_0, options));
+        bitmaps.put(Image.TILE_DIRT_BACK_1, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_back_1, options));
+        bitmaps.put(Image.TILE_DIRT_BACK_2, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_back_2, options));
+        bitmaps.put(Image.TILE_DIRT_BACK_3, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_dirt_back_3, options));
         bitmaps.put(Image.TILE_GRASS_0, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_grass_0, options));
         bitmaps.put(Image.TILE_GRASS_1, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_grass_1, options));
         bitmaps.put(Image.TILE_GRASS_2, BitmapFactory.decodeResource(resources,
                 R.drawable.tile_grass_2, options));
-        bitmaps.put(Image.TILE_GRASS_3, BitmapFactory.decodeResource(resources,
-                R.drawable.tile_grass_3, options));
+        bitmaps.put(Image.TILE_TOP_GRASS, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_top_grass, options));
         bitmaps.put(Image.GRASS_0, BitmapFactory.decodeResource(resources,
                 R.drawable.grass_0, options));
         bitmaps.put(Image.GRASS_1, BitmapFactory.decodeResource(resources,
@@ -138,6 +162,14 @@ public class ResourcesLoader {
                 R.drawable.chamomile_2, options));
         bitmaps.put(Image.CHAMOMILE_7, BitmapFactory.decodeResource(resources,
                 R.drawable.chamomile_1, options));
+        bitmaps.put(Image.CLOUD_0, BitmapFactory.decodeResource(resources,
+                R.drawable.cloud_0, options));
+        bitmaps.put(Image.CLOUD_1, BitmapFactory.decodeResource(resources,
+                R.drawable.cloud_1, options));
+        bitmaps.put(Image.CLOUD_2, BitmapFactory.decodeResource(resources,
+                R.drawable.cloud_2, options));
+        bitmaps.put(Image.CLOUD_3, BitmapFactory.decodeResource(resources,
+                R.drawable.cloud_3, options));
         bitmaps.put(Image.ROSE_0, BitmapFactory.decodeResource(resources,
                 R.drawable.rose_0, options));
         bitmaps.put(Image.ROSE_1, BitmapFactory.decodeResource(resources,

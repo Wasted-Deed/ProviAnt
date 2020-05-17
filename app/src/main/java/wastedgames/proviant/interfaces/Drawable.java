@@ -12,6 +12,8 @@ public interface Drawable {
 
     float getY();
 
+    float getX(Vector2 camera);
+
     int getWidth();
 
     int getHeight();

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import java.util.Stack;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.TileState;
 import wastedgames.proviant.enumerations.TileType;
 import wastedgames.proviant.interfaces.Updatable;
 import wastedgames.proviant.objects.PortableUnit;
@@ -15,9 +16,9 @@ import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN;
 import static wastedgames.proviant.layouts.GameField.getScaledTouch;
 
 public class TileMap implements Updatable {
+    public final static int FLOOR_START = 11;
     public final static int TILE_SIZE = 8;
     private final int MAX_CAVE_SIZE = 40;
-    private final int FLOOR_START = 11;
     private final int MAX_DURATION = 3;
     private Tile[][] map;
     private int sizeX;
@@ -156,6 +157,93 @@ public class TileMap implements Updatable {
             }
         }
         destroyUnstableTiles(x, y);
+        checkRoundedTiles(x, y);
+    }
+
+    private int countSolidAround(int x, int y) {
+        if (!checkTilesAround(x, y)) {
+            return 8;
+        }
+        int count = 0;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                if (map[x + i][y + j].isSolid()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private void checkRoundedTiles(int x, int y) {
+        if (!checkTilesAround(x, y)) {
+            return;
+        }
+        if (map[x][y] instanceof Dirt) {
+            if (!map[x + 1][y].isSolid()) {
+                if (!map[x + 1][y - 1].isSolid() &&
+                        !map[x][y - 1].isSolid()) {
+                    map[x][y].setCurrentState(TileState.ROUNDED);
+                    map[x][y].setCurrentFrame(0);
+                    if (!map[x - 1][y - 1].isSolid() && !map[x - 1][y].isSolid()) {
+                        map[x][y].setCurrentState(TileState.ROUNDED);
+                        map[x][y].setCurrentFrame(4);
+                    }
+                }
+                if (!map[x + 1][y + 1].isSolid() &&
+                        !map[x][y + 1].isSolid()) {
+                    map[x][y].setCurrentState(TileState.ROUNDED);
+                    map[x][y].setCurrentFrame(1);
+                    if (!map[x + 1][y - 1].isSolid() && !map[x][y - 1].isSolid()) {
+                        map[x][y].setCurrentState(TileState.ROUNDED);
+                        map[x][y].setCurrentFrame(5);
+                    }
+                }
+            }
+            if (!map[x - 1][y].isSolid()) {
+                if (!map[x - 1][y + 1].isSolid() && !map[x][y + 1].isSolid()) {
+                    map[x][y].setCurrentState(TileState.ROUNDED);
+                    map[x][y].setCurrentFrame(2);
+                    if (!map[x + 1][y + 1].isSolid() && !map[x + 1][y].isSolid()) {
+                        map[x][y].setCurrentState(TileState.ROUNDED);
+                        map[x][y].setCurrentFrame(6);
+                        return;
+                    }
+                }
+                if (!map[x - 1][y - 1].isSolid() && !map[x][y - 1].isSolid()) {
+                    map[x][y].setCurrentState(TileState.ROUNDED);
+                    map[x][y].setCurrentFrame(3);
+                    if (!map[x][y + 1].isSolid() && !map[x - 1][y + 1].isSolid()) {
+                        map[x][y].setCurrentState(TileState.ROUNDED);
+                        map[x][y].setCurrentFrame(7);
+                    }
+                }
+            }
+        }
+        if (map[x][y] instanceof DirtBack) {
+            if (map[x][y - 1].isSolid() && map[x + 1][y].isSolid()) {
+                map[x][y].setCurrentState(TileState.ROUNDED);
+                map[x][y].setCurrentFrame(0);
+            }
+            else if (map[x][y + 1].isSolid() && map[x + 1][y].isSolid()) {
+                map[x][y].setCurrentState(TileState.ROUNDED);
+                map[x][y].setCurrentFrame(1);
+            }
+            else if (map[x][y + 1].isSolid() && map[x - 1][y].isSolid()) {
+                map[x][y].setCurrentState(TileState.ROUNDED);
+                map[x][y].setCurrentFrame(2);
+            }
+            else if (map[x][y - 1].isSolid() && map[x - 1][y].isSolid()) {
+                map[x][y].setCurrentState(TileState.ROUNDED);
+                map[x][y].setCurrentFrame(3);
+            } else {
+                map[x][y].setCurrentState(TileState.EXIST);
+                map[x][y].setCurrentFrame(0);
+            }
+        }
     }
 
     private void handleTilesAround(int x, int y) {
@@ -200,7 +288,7 @@ public class TileMap implements Updatable {
 
     private void destroyUnstableTiles(int x, int y) {
         Stack<Vector2> tiles = new Stack<>();
-        int count = destroySideHeft(x, y, 1, 0, tiles);
+        destroySideHeft(x, y, 1, 0, tiles);
         //destroySideHeft(x, y, -1, count, tiles);
     }
 

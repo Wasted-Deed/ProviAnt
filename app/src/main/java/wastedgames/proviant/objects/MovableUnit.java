@@ -5,6 +5,7 @@ import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Movable;
 import wastedgames.proviant.interfaces.Portable;
 import wastedgames.proviant.layouts.GameField;
+import wastedgames.proviant.objects.landscape.TileMap;
 
 public abstract class MovableUnit extends AbstractUnit implements Movable {
     Portable pickedObject;
@@ -99,8 +100,8 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         return damage;
     }
 
-    public boolean checkIfLandedOnBlock() {
-        return super.checkIfLanded();
+    public boolean checkIfLandedOnBlock(TileMap map) {
+        return super.checkIfLanded(map);
     }
 
     public boolean checkIfCanAttach() {

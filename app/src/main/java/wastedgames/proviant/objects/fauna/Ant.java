@@ -7,6 +7,7 @@ import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
 import wastedgames.proviant.objects.MovableUnit;
+import wastedgames.proviant.objects.landscape.TileMap;
 
 public class Ant extends MovableUnit {
     private int efficiency;
@@ -35,7 +36,7 @@ public class Ant extends MovableUnit {
     }
 
     @Override
-    public boolean checkIfLanded() {
-        return super.checkIfLanded() || checkIfCanAttach();
+    public boolean checkIfLanded(TileMap map) {
+        return super.checkIfLanded(map) || checkIfCanAttach();
     }
 }

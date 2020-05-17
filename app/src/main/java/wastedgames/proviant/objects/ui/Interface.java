@@ -49,6 +49,11 @@ public class Interface implements Drawable, Updatable {
     }
 
     @Override
+    public float getX(Vector2 camera) {
+        return 0;
+    }
+
+    @Override
     public int getWidth() {
         return 0;
     }

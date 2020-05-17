@@ -12,8 +12,7 @@ public class GrassTop extends Tile {
         super(x, y, size);
         type = TileType.GRASS;
         appearance.put(TileState.EXIST,
-                new Appearance(ResourcesLoader.getImage(Image.TILE_GRASS_1)));
-        currentState = TileState.EXIST;
+                new Appearance(ResourcesLoader.getImage(Image.TILE_TOP_GRASS)));
         isSolid = false;
     }
 }

@@ -1,5 +1,5 @@
 package wastedgames.proviant.enumerations;
 
 public enum TileState {
-    EXIST, DAMAGED
+    EXIST, DAMAGED, ROUNDED
 }

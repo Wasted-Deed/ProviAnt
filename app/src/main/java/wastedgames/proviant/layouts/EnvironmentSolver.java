@@ -1,12 +1,15 @@
 package wastedgames.proviant.layouts;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
 import wastedgames.proviant.objects.environment.Chamomile;
+import wastedgames.proviant.objects.environment.Cloud;
 import wastedgames.proviant.objects.environment.Grass;
 import wastedgames.proviant.objects.environment.Rose;
 import wastedgames.proviant.objects.environment.Stick;
 import wastedgames.proviant.objects.environment.Stone;
+import wastedgames.proviant.objects.environment.Sun;
 import wastedgames.proviant.objects.fauna.Bug;
 import wastedgames.proviant.objects.fauna.LadyBug;
 import wastedgames.proviant.objects.fauna.Snail;
@@ -19,6 +22,8 @@ public class EnvironmentSolver {
     final int BASES_COUNT = 2;
 
     public void addEnvironment(UnitSolver solver, Vector2 size) {
+        Sun sun = new Sun(100, 70);
+        solver.addDrawableUnit(sun);
         for (int i = 0; i <= 10; i++) {
             BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, FLOOR_Y);
             solver.addDrawableUnit(backgroundGrass);
@@ -45,24 +50,37 @@ public class EnvironmentSolver {
             UnitBase base1 = new UnitBase((int) (Math.random() * size.getX()), FLOOR_Y);
             UnitBase base2 = new UnitBase((int) (Math.random() * size.getX()), FLOOR_Y);
             UnitBase base3 = new UnitBase((int) (Math.random() * size.getX()), FLOOR_Y);
+            UnitBase base4 = new UnitBase((int) (Math.random() * size.getX()), FLOOR_Y);
             for (int j = 0; j < 5; j++) {
                 Snail s = new Snail((int) base1.getX(), FLOOR_Y);
                 Bug b = new Bug((int) (Math.random() * size.getX()), FLOOR_Y);
                 LadyBug lb = new LadyBug((int) (Math.random() * size.getX()), FLOOR_Y);
+                Worm w = new Worm((int) (Math.random() * size.getX()), FLOOR_Y);
+                solver.addBoth(w);
                 solver.addBoth(s);
                 solver.addBoth(b);
                 solver.addBoth(lb);
                 base1.addUnit(s);
                 base2.addUnit(b);
                 base3.addUnit(lb);
+                base4.addUnit(w);
             }
             solver.addBoth(base1);
             solver.addBoth(base2);
             solver.addBoth(base3);
+            solver.addBoth(base4);
         }
-        for (int i = 0; i < 10; i++) {
-            Worm w = new Worm((int) (Math.random() * size.getX()), FLOOR_Y);
-            solver.addBoth(w);
+    }
+
+    public void solveClouds(UnitSolver solver) {
+
+    }
+
+    public void checkEnvUnit(AbstractUnit unit, Vector2 screenSize) {
+        if (unit instanceof Cloud) {
+            if (unit.getX() > screenSize.getX() + unit.getWidth()) {
+                unit.destroy();
+            }
         }
     }
 }

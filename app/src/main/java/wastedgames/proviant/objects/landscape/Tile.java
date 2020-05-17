@@ -27,13 +27,14 @@ public abstract class Tile implements Destroyable, Drawable {
     protected int durability;
     protected int damage;
 
-    protected boolean isSolid;
+    boolean isSolid;
 
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
         appearance = new HashMap<>();
         damage = 0;
+        currentState = TileState.EXIST;
     }
 
     public Tile(int x, int y, int size) {
@@ -87,14 +88,27 @@ public abstract class Tile implements Destroyable, Drawable {
         return appearance.get(currentState).getCurrentFrame();
     }
 
+    public void setCurrentFrame(int frame) {
+        appearance.get(currentState).setCurrentFrame(frame);
+    }
+
     @Override
     public void draw(Canvas canvas, Paint paint, Vector2 camera) {
         canvas.drawBitmap(appearance.get(currentState).getCurrentFrame(), x, y, paint);
+    }
+
+    public void setCurrentState(TileState currentState) {
+        this.currentState = currentState;
     }
 
     @NonNull
     @Override
     public String toString() {
         return "Tile with type: " + type + " at position: " + "[" + x + ", " + y + "]";
+    }
+
+    @Override
+    public float getX(Vector2 camera) {
+        return 0;
     }
 }

@@ -12,7 +12,6 @@ public class AirTile extends Tile {
         type = TileType.AIR;
         appearance.put(TileState.EXIST,
                 new Appearance(ResourcesLoader.getImage(Image.TILE_GRASS_1)));
-        currentState = TileState.EXIST;
         isSolid = false;
     }
 }

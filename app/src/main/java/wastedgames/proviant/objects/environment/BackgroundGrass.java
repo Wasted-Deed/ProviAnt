@@ -12,6 +12,7 @@ public class BackgroundGrass extends AbstractUnit {
         appearance.put(UnitState.EXIST,
                 new Appearance(ResourcesLoader.getImage(Image.BACKGROUND_GRASS)));
         currentState = UnitState.EXIST;
+        parallax = 0.3f;
 
     }
 

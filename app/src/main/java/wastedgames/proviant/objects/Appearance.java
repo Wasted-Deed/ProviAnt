@@ -45,6 +45,10 @@ public class Appearance {
         return appearance[currentFrame];
     }
 
+    public void setCurrentFrame(int currentFrame) {
+        this.currentFrame = currentFrame;
+    }
+
     public int getCurrentNumber() {
         return currentFrame;
     }

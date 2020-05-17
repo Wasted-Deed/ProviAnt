@@ -12,24 +12,9 @@ public class DirtGrass extends Tile {
     public DirtGrass(int x, int y, int size, int configuration) {
         super(x, y, size);
         type = TileType.DIRT;
-        setConfiguration(configuration);
-        currentState = TileState.EXIST;
+        appearance.put(TileState.EXIST, new Appearance
+                (ResourcesLoader.getImage(Image.valueOf("TILE_GRASS_" + configuration))));
         durability = Physics.DIRT_DURABILITY;
         isSolid = true;
-    }
-    private void setConfiguration(int configuration) {
-        switch (configuration) {
-            case 1:
-                appearance.put(TileState.EXIST,
-                        new Appearance(ResourcesLoader.getImage(Image.TILE_GRASS_2)));
-                break;
-            case 2:
-                appearance.put(TileState.EXIST,
-                        new Appearance(ResourcesLoader.getImage(Image.TILE_GRASS_3)));
-                break;
-            default:
-                appearance.put(TileState.EXIST,
-                        new Appearance(ResourcesLoader.getImage(Image.TILE_GRASS_0)));
-        }
     }
 }

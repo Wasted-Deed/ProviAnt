@@ -2,6 +2,7 @@ package wastedgames.proviant.objects;
 
 import java.util.function.Function;
 
+import wastedgames.proviant.engine.MyMath;
 import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.objects.landscape.TileMap;
 
@@ -32,6 +33,22 @@ public class CollisionMask {
             }
         }
         return false;
+    }
+
+    public float getArea() {
+        return MyMath.triangleArea(leftTop, leftBottom, rightTop) +
+                MyMath.triangleArea(leftTop, rightTop, rightBottom);
+    }
+
+    public float getArea(Vector2 point, Vector2 pos) {
+        return MyMath.triangleArea(leftTop.addedCopy(pos), leftBottom.addedCopy(pos), point) +
+                MyMath.triangleArea(leftTop.addedCopy(pos), rightTop.addedCopy(pos), point) +
+                MyMath.triangleArea(rightTop.addedCopy(pos), rightBottom.addedCopy(pos), point) +
+                MyMath.triangleArea(leftBottom.addedCopy(pos), rightBottom.addedCopy(pos), point);
+    }
+
+    public boolean isTouched(Vector2 touch, Vector2 pos) {
+        return Math.abs(getArea() - getArea(touch, pos)) < MyMath.INFELICITY;
     }
 
     public boolean checkFront(Vector2 pos, Function<Vector2, Boolean> check) {

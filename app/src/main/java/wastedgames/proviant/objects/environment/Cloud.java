@@ -6,14 +6,14 @@ import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.Appearance;
 
-public class Sun extends AbstractUnit {
-    public Sun(float x, float y) {
+public class Cloud extends AbstractUnit {
+    public Cloud(float x, float y) {
         super(x, y);
+        String name = "CLOUD_" + (int) (Math.random() * 5);
         appearance.put(UnitState.EXIST,
-                new Appearance(ResourcesLoader.getImage(Image.SUN_0)));
+                new Appearance(ResourcesLoader.getImage(Image.valueOf(name))));
         currentState = UnitState.EXIST;
-        setStandardMask(Image.SUN_0);
-        parallax = 1;
+        setStandardMask(Image.valueOf(name));
     }
 
     @Override

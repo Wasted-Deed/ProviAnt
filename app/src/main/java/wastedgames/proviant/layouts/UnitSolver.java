@@ -49,13 +49,22 @@ public class UnitSolver {
     }
 
     private void setUnitToGravity(MovableUnit unit) {
-        if (!unit.checkIfLanded() && !unit.isAttached()) {
+        if (!unit.checkIfLanded(GAMEFIELD.map) && !unit.isAttached()) {
             unit.move(new Vector2(0, Physics.GRAVITY_SPEED));
         } else if (unit instanceof Drop && unit.getCurrentState() != UnitState.DESTROYED) {
             unit.damage(1);
         }
     }
-
+    private void checkState(MovableUnit unit) {
+        if(!(unit instanceof ActiveUnit)) {
+            return;
+        }
+        if(unit.hasCome()) {
+            unit.setCurrentState(UnitState.IDLE);
+        } else {
+            unit.setCurrentState(UnitState.WALK);
+        }
+    }
     public void update() {
         for (int i = 0; i < MOVABLE_UNITS.size(); i++) {
             MovableUnit unit = MOVABLE_UNITS.get(i);
@@ -64,6 +73,7 @@ public class UnitSolver {
             setUnitToGravity(unit);
             unit.update();
             checkUnit(unit);
+            checkState(unit);
             if (unit.isDestroyed()) {
                 removeBoth(unit);
             }
@@ -73,7 +83,7 @@ public class UnitSolver {
 
     public void draw(Canvas canvas, Paint paint, Vector2 CAMERA) {
         for (Drawable unit : DRAWABLE_UNITS) {
-            if (GAMEFIELD.checkIfOnScreen(unit.getX(), unit.getY(),
+            if (GAMEFIELD.checkIfOnScreen(unit.getX(CAMERA), unit.getY(),
                     Math.max(unit.getWidth(), unit.getHeight()))) {
                 unit.draw(canvas, paint, CAMERA);
             }
@@ -90,7 +100,7 @@ public class UnitSolver {
 
     private void checkUnit(MovableUnit unit) {
         Ant hero = GAMEFIELD.hero;
-        /*if (hero != null && GAMEFIELD.touchType == TouchType.NONE &&
+        /*if (hero != null && ThreadSolver.IS_TOUCHING &&
                 hero.isPointReachable(unit.getX(), unit.getY()) &&
                 unit.isTouched(getScaledTouch())) {
             if (unit instanceof Portable) {

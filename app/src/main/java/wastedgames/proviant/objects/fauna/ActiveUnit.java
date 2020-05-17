@@ -3,6 +3,7 @@ package wastedgames.proviant.objects.fauna;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
+import wastedgames.proviant.objects.landscape.TileMap;
 
 public class ActiveUnit extends MovableUnit {
     //TODO: Change x,y to Vector2 everywhere
@@ -17,7 +18,7 @@ public class ActiveUnit extends MovableUnit {
     }
 
     @Override
-    public boolean checkIfLanded() {
-        return super.checkIfLanded() || checkIfCanAttach();
+    public boolean checkIfLanded(TileMap map) {
+        return super.checkIfLanded(map) || checkIfCanAttach();
     }
 }

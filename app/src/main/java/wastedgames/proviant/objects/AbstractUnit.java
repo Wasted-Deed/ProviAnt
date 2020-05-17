@@ -15,6 +15,7 @@ import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Updatable;
 import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.ResourcesLoader;
+import wastedgames.proviant.objects.landscape.TileMap;
 
 public abstract class AbstractUnit implements Updatable, Drawable {
     protected HashMap<UnitState, Appearance> appearance;
@@ -24,6 +25,7 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     protected Vector2 dir;
 
     protected static int MAX_HP;
+    protected float parallax;
     protected int hp;
     protected int actionDistance;
     protected int angle;
@@ -37,6 +39,7 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         appearance = new HashMap<>();
         currentState = UnitState.IDLE;
         angle = 0;
+        parallax = 0;
     }
 
     public AbstractUnit(Vector2 pos) {
@@ -62,7 +65,7 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     @Override
     public void draw(Canvas canvas, Paint paint, Vector2 camera) {
         Bitmap currentFrame = getCurrentFrame();
-        canvas.drawBitmap(currentFrame, getFrameMatrix(), paint);
+        canvas.drawBitmap(currentFrame, getFrameMatrix(camera), paint);
         appearance.get(currentState).updateAppearance();
         //drawMask(canvas, paint);
     }
@@ -115,22 +118,24 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         return appearance.get(currentState).getCurrentFrame();
     }
 
-    private Matrix getFrameMatrix() {
+    private Matrix getFrameMatrix(Vector2 camera) {
         Bitmap currentFrame = getCurrentFrame();
         Matrix matrix = new Matrix();
         Vector2 center = new Vector2(currentFrame.getWidth() / 2,
                 currentFrame.getHeight() / 2);
         int arg = 1;
         float shift = 1;
-        if (isMirrored && angle == 0) {
+        if (isMirrored && getAngle() == 0) {
             arg = -1;
             matrix.setScale(arg, 1);
         }
-        if (angle != 0) {
-            matrix.setRotate(-angle, center.getX(), center.getY());
+
+        if (UnitState.getType(currentState) == UnitState.Type.UNDERGROUND) {
+            matrix.setRotate(-getAngle(), center.getX(), center.getY());
             shift = 2;
         }
-        matrix.postTranslate(getX() - arg * currentFrame.getWidth() / 2f,
+        matrix.postTranslate(getX() + camera.getX() * parallax
+                        - arg * currentFrame.getWidth() / 2f,
                 getY() - currentFrame.getHeight() / shift);
         return matrix;
     }
@@ -171,12 +176,16 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         }
     }
 
-    public boolean checkIfLanded() {
-        return mask.checkBottom(pos, (a) -> GameField.MAP.checkPointCollision(a));
+    public boolean checkIfLanded(TileMap map) {
+        return mask.checkBottom(pos, map::checkPointCollision);
     }
 
-    public boolean checkDirCollision() {
-        return mask.checkFront(pos.addedCopy(dir), (a) -> GameField.MAP.checkPointCollision(a));
+    public boolean isTouched(Vector2 touch) {
+        return mask.isTouched(touch, pos);
+    }
+
+    public boolean checkDirCollision(TileMap map) {
+        return mask.checkFront(pos.addedCopy(dir), map::checkPointCollision);
     }
 
     public UnitState getCurrentState() {
@@ -210,4 +219,10 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     public void setAngle(int angle) {
         this.angle = angle;
     }
+
+    @Override
+    public float getX(Vector2 camera) {
+        return getX() + camera.getX() * parallax;
+    }
+
 }
