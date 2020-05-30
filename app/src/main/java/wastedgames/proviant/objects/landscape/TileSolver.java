@@ -1,8 +1,19 @@
 package wastedgames.proviant.objects.landscape;
 
+import java.util.Stack;
+import java.util.function.Consumer;
+
+import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.TileState;
+import wastedgames.proviant.enumerations.TileType;
+import wastedgames.proviant.objects.PortableUnit;
+import wastedgames.proviant.objects.environment.DirtPile;
+
+import static wastedgames.proviant.objects.landscape.TileMap.TILE_SIZE;
 
 public class TileSolver {
+    private Consumer<PortableUnit> addTile;
+
     private Tile[][] map;
     private int sizeX;
     private int sizeY;
@@ -89,4 +100,55 @@ public class TileSolver {
             }
         }
     }
+
+
+    //TODO: Make it work properly
+    private int destroySideHeft(int x, int y, int dir, int count, Stack<Vector2> tiles) {
+        if (!checkTilesAround(x, y)) {
+            return count;
+        }
+        boolean isClear = !map[x][y + 1].isSolid() && !map[x][y - 1].isSolid();
+        boolean isCurrentSolid = map[x][y].isSolid();
+        if (isClear && isCurrentSolid && (!map[x + 1][y].isSolid() || !map[x - 1][y].isSolid())) {
+            destroyTile(x, y);
+        }
+        return count;
+    }
+
+    private void destroyUnstableTiles(int x, int y) {
+        Stack<Vector2> tiles = new Stack<>();
+        destroySideHeft(x, y, 1, 0, tiles);
+    }
+
+    private void handleTilesAround(int x, int y) {
+        setTileEnvironment(x, y);
+        setTileEnvironment(x, y - 1);
+        setTileEnvironment(x, y + 1);
+        setTileEnvironment(x - 1, y);
+        setTileEnvironment(x + 1, y);
+    }
+
+    public void destroyTile(int x, int y) {
+        map[x][y] = new DirtBack(x, y, TILE_SIZE);
+        if (addTile != null) {
+            addTile.accept(new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE));
+        }
+        handleTilesAround(x, y);
+    }
+
+    public void setAddTile(Consumer<PortableUnit> addTile) {
+        this.addTile = addTile;
+    }
+
+    private void setTileEnvironment(int x, int y) {
+        if (checkBounds(x, y - 1) && checkBounds(x, y)) {
+            if (map[x][y - 1].getType() == TileType.GRASS
+                    && !map[x][y].isSolid()) {
+                map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
+            }
+        }
+        destroyUnstableTiles(x, y);
+        checkRoundedTiles(x, y);
+    }
+
 }
