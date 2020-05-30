@@ -4,9 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import java.util.Stack;
+import java.util.function.Consumer;
 
 import wastedgames.proviant.engine.Vector2;
-import wastedgames.proviant.enumerations.TileState;
 import wastedgames.proviant.enumerations.TileType;
 import wastedgames.proviant.interfaces.Updatable;
 import wastedgames.proviant.objects.PortableUnit;
@@ -15,10 +15,15 @@ import wastedgames.proviant.objects.environment.DirtPile;
 import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN;
 import static wastedgames.proviant.layouts.GameField.getScaledTouch;
 
+
 public class TileMap implements Updatable {
+    public Consumer<PortableUnit> addTile;
     public final static int FLOOR_START = 11;
     public final static int TILE_SIZE = 8;
+
+    private TileSolver solver;
     private final int MAX_CAVE_SIZE = 40;
+    private final int MAX_STONE_SIZE = 40;
     private final int MAX_DURATION = 3;
     private Tile[][] map;
     private int sizeX;
@@ -28,13 +33,25 @@ public class TileMap implements Updatable {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         map = new Tile[sizeX][sizeY];
+        solver = new TileSolver(map, sizeX, sizeY);
         fillMap(FLOOR_START);
         generateCaves(100);
+        generateStones(50);
+    }
+
+    public void setAddTile(Consumer<PortableUnit> addTile) {
+        this.addTile = addTile;
     }
 
     private void generateCaves(int count) {
         for (int i = 0; i < count; i++) {
             generateCave();
+        }
+    }
+
+    private void generateStones(int count) {
+        for (int i = 0; i < count; i++) {
+            generateStone();
         }
     }
 
@@ -60,7 +77,7 @@ public class TileMap implements Updatable {
 
     private void generateCave() {
         int startX = (int) (Math.random() * sizeX);
-        int startY = (int) (Math.random() * sizeY);
+        int startY = FLOOR_START + (int) (Math.random() * (sizeY - FLOOR_START));
         generateCave(startX, startY, 0);
         generateCave(startX + 1, startY, 0);
         generateCave(startX - 1, startY, 0);
@@ -69,10 +86,10 @@ public class TileMap implements Updatable {
     }
 
     private void generateCave(int x, int y, int size) {
-        if (!checkBounds(x, y) || size >= MAX_CAVE_SIZE || y <= FLOOR_START) {
+        if (!solver.checkBounds(x, y) || size >= MAX_CAVE_SIZE || y <= FLOOR_START) {
             return;
         } else {
-            destroyDirtTile(x, y);
+            destroyTile(x, y);
         }
         int dir = Math.random() > 0.5f ? 1 : -1;
         boolean isDirX = Math.random() > 0.5;
@@ -83,6 +100,32 @@ public class TileMap implements Updatable {
         }
     }
 
+    private void generateStone() {
+        int startX = (int) (Math.random() * sizeX);
+        int startY = FLOOR_START * 3 / 2 + (int) (Math.random() * (sizeY - FLOOR_START * 3 / 2));
+        generateStone(startX, startY, 0);
+        generateStone(startX + 1, startY, 0);
+        generateStone(startX - 1, startY, 0);
+        generateStone(startX, startY + 1, 0);
+        generateStone(startX, startY - 1, 0);
+
+    }
+
+    private void generateStone(int x, int y, int size) {
+        if (!solver.checkBounds(x, y) || size >= MAX_STONE_SIZE || y <= FLOOR_START) {
+            return;
+        } else if (map[x][y].isSolid()) {
+            map[x][y] = new StoneTile(x, y, TILE_SIZE);
+        }
+        int dir = Math.random() > 0.5f ? 1 : -1;
+        boolean isDirX = Math.random() > 0.5;
+        if (isDirX) {
+            generateStone(x + dir, y, size + (int) (Math.random() * 2) + 1);
+        } else {
+            generateStone(x, y + dir, size + (int) (Math.random() * 2) + 1);
+        }
+    }
+
     public void draw(Canvas canvas, Paint paint, Vector2 camera, boolean isBackground) {
         int startX = (int) (camera.getX() / TILE_SIZE);
         int endX = (int) (startX + SCALED_SCREEN.getX() / TILE_SIZE + 1);
@@ -90,7 +133,7 @@ public class TileMap implements Updatable {
         int endY = (int) (startY + SCALED_SCREEN.getY() / TILE_SIZE + 1);
         for (int x = startX; x <= endX; x++) {
             for (int y = startY; y <= endY; y++) {
-                if (!checkBounds(x, y)) {
+                if (!solver.checkBounds(x, y)) {
                     continue;
                 }
                 if (map[x][y].getType() == TileType.AIR) {
@@ -104,14 +147,10 @@ public class TileMap implements Updatable {
         }
     }
 
-    private boolean checkBounds(int x, int y) {
-        return x >= 0 && x < sizeX && y >= 0 && y < sizeY && map[x][y] != null;
-    }
-
     public Tile getTouchedTile() {
         int x = getTouchedTileX();
         int y = getTouchedTileY();
-        if (checkBounds(x, y)) {
+        if (solver.checkBounds(x, y)) {
             return map[x][y];
         }
         return null;
@@ -120,48 +159,49 @@ public class TileMap implements Updatable {
     public void fillTouchedTile() {
         int x = getTouchedTileX();
         int y = getTouchedTileY();
-        if (checkBounds(x, y)) {
+        if (solver.checkBounds(x, y)) {
             map[x][y] = new Dirt(x, y, TILE_SIZE, 0);
         }
     }
 
-    public PortableUnit damageTouchedTile(int frequency) {
+    public void damageTouchedTile(int frequency) {
         Tile touchedTile = getTouchedTile();
         if (touchedTile == null) {
-            return null;
+            return;
         }
         if (touchedTile.isSolid()) {
             touchedTile.damage(frequency);
         } else {
-            return null;
+            return;
         }
         if (touchedTile.isDestroyed()) {
             int x = getTouchedTileX();
             int y = getTouchedTileY();
-            destroyDirtTile(x, y);
-            return new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE);
+            destroyTile(x, y);
         }
-        return null;
     }
 
-    private void destroyDirtTile(int x, int y) {
+    private void destroyTile(int x, int y) {
         map[x][y] = new DirtBack(x, y, TILE_SIZE);
+        if (addTile != null) {
+            addTile.accept(new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE));
+        }
         handleTilesAround(x, y);
     }
 
     private void setTileEnvironment(int x, int y) {
-        if (checkBounds(x, y - 1) && checkBounds(x, y)) {
+        if (solver.checkBounds(x, y - 1) && solver.checkBounds(x, y)) {
             if (map[x][y - 1].getType() == TileType.GRASS
                     && !map[x][y].isSolid()) {
                 map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
             }
         }
         destroyUnstableTiles(x, y);
-        checkRoundedTiles(x, y);
+        solver.checkRoundedTiles(x, y);
     }
 
     private int countSolidAround(int x, int y) {
-        if (!checkTilesAround(x, y)) {
+        if (!solver.checkTilesAround(x, y)) {
             return 8;
         }
         int count = 0;
@@ -178,73 +218,6 @@ public class TileMap implements Updatable {
         return count;
     }
 
-    private void checkRoundedTiles(int x, int y) {
-        if (!checkTilesAround(x, y)) {
-            return;
-        }
-        if (map[x][y] instanceof Dirt) {
-            if (!map[x + 1][y].isSolid()) {
-                if (!map[x + 1][y - 1].isSolid() &&
-                        !map[x][y - 1].isSolid()) {
-                    map[x][y].setCurrentState(TileState.ROUNDED);
-                    map[x][y].setCurrentFrame(0);
-                    if (!map[x - 1][y - 1].isSolid() && !map[x - 1][y].isSolid()) {
-                        map[x][y].setCurrentState(TileState.ROUNDED);
-                        map[x][y].setCurrentFrame(4);
-                    }
-                }
-                if (!map[x + 1][y + 1].isSolid() &&
-                        !map[x][y + 1].isSolid()) {
-                    map[x][y].setCurrentState(TileState.ROUNDED);
-                    map[x][y].setCurrentFrame(1);
-                    if (!map[x + 1][y - 1].isSolid() && !map[x][y - 1].isSolid()) {
-                        map[x][y].setCurrentState(TileState.ROUNDED);
-                        map[x][y].setCurrentFrame(5);
-                    }
-                }
-            }
-            if (!map[x - 1][y].isSolid()) {
-                if (!map[x - 1][y + 1].isSolid() && !map[x][y + 1].isSolid()) {
-                    map[x][y].setCurrentState(TileState.ROUNDED);
-                    map[x][y].setCurrentFrame(2);
-                    if (!map[x + 1][y + 1].isSolid() && !map[x + 1][y].isSolid()) {
-                        map[x][y].setCurrentState(TileState.ROUNDED);
-                        map[x][y].setCurrentFrame(6);
-                        return;
-                    }
-                }
-                if (!map[x - 1][y - 1].isSolid() && !map[x][y - 1].isSolid()) {
-                    map[x][y].setCurrentState(TileState.ROUNDED);
-                    map[x][y].setCurrentFrame(3);
-                    if (!map[x][y + 1].isSolid() && !map[x - 1][y + 1].isSolid()) {
-                        map[x][y].setCurrentState(TileState.ROUNDED);
-                        map[x][y].setCurrentFrame(7);
-                    }
-                }
-            }
-        }
-        if (map[x][y] instanceof DirtBack) {
-            if (map[x][y - 1].isSolid() && map[x + 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(0);
-            }
-            else if (map[x][y + 1].isSolid() && map[x + 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(1);
-            }
-            else if (map[x][y + 1].isSolid() && map[x - 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(2);
-            }
-            else if (map[x][y - 1].isSolid() && map[x - 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(3);
-            } else {
-                map[x][y].setCurrentState(TileState.EXIST);
-                map[x][y].setCurrentFrame(0);
-            }
-        }
-    }
 
     private void handleTilesAround(int x, int y) {
         setTileEnvironment(x, y);
@@ -254,42 +227,23 @@ public class TileMap implements Updatable {
         setTileEnvironment(x + 1, y);
     }
 
-    private boolean checkTilesAround(int x, int y) {
-        return checkBounds(x, y) && checkBounds(x, y - 1) && checkBounds(x, y + 1) &&
-                checkBounds(x - 1, y) && checkBounds(x + 1, y);
-    }
 
     //TODO: Make it work properly
     private int destroySideHeft(int x, int y, int dir, int count, Stack<Vector2> tiles) {
-        if (!checkTilesAround(x, y)) {
+        if (!solver.checkTilesAround(x, y)) {
             return count;
         }
         boolean isClear = !map[x][y + 1].isSolid() && !map[x][y - 1].isSolid();
         boolean isCurrentSolid = map[x][y].isSolid();
         if (isClear && isCurrentSolid && (!map[x + 1][y].isSolid() || !map[x - 1][y].isSolid())) {
-            destroyDirtTile(x, y);
+            destroyTile(x, y);
         }
-        /*if (isClear && map[x][y].isSolid()) {
-            tiles.push(new Vector2(x, y));
-            if (map[x + dir][y].isSolid()) {
-                destroySideHeft(x + dir, y, dir, count + 1, tiles);
-            }
-        }
-        if (!map[x][y].isSolid() && count >= MAX_DURATION) {
-            while (!tiles.empty()) {
-                Vector2 pos = tiles.pop();
-                int x1 = (int) pos.getX();
-                int y1 = (int) pos.getY();
-                destroyDirtTile(x1, y1);
-            }
-        }*/
         return count;
     }
 
     private void destroyUnstableTiles(int x, int y) {
         Stack<Vector2> tiles = new Stack<>();
         destroySideHeft(x, y, 1, 0, tiles);
-        //destroySideHeft(x, y, -1, count, tiles);
     }
 
     public int getTouchedTileX() {
@@ -303,26 +257,14 @@ public class TileMap implements Updatable {
     public boolean checkPointCollision(Vector2 point) {
         int x = (int) (point.getX() / TILE_SIZE);
         int y = (int) (point.getY() / TILE_SIZE);
-        return !checkBounds(x, y) || map[x][y].isSolid;
+        return !solver.checkBounds(x, y) || map[x][y].isSolid;
     }
 
-    /*public boolean checkUnitCollide(Vector2 leftTop, Vector2 rightBottom, int dirX, int dirY) {
-        int startX = (int) (leftTop.getX() / TILE_SIZE);
-        int startY = (int) (leftTop.getY() / TILE_SIZE);
-        int endX = (int) (rightBottom.getX() / TILE_SIZE);
-        int endY = (int) (rightBottom.getY() / TILE_SIZE);
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y < endY; y++) {
-                if (!checkBounds(x + dirX, y + dirY)) {
-                    continue;
-                }
-                if (map[x + dirX][y + dirY].isSolid()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }*/
+    public Vector2 getRealTilePos(Vector2 touch) {
+        touch.setX((int) (touch.getX() / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2);
+        touch.setY((int) (touch.getY() / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2);
+        return touch;
+    }
 
     @Override
     public void update() {

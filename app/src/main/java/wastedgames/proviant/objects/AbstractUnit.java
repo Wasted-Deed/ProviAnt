@@ -13,8 +13,8 @@ import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.interfaces.Drawable;
 import wastedgames.proviant.interfaces.Updatable;
-import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.ResourcesLoader;
+import wastedgames.proviant.maintenance.Timer;
 import wastedgames.proviant.objects.landscape.TileMap;
 
 public abstract class AbstractUnit implements Updatable, Drawable {
@@ -23,11 +23,13 @@ public abstract class AbstractUnit implements Updatable, Drawable {
     protected UnitState currentState;
     protected Vector2 pos;
     protected Vector2 dir;
-
-    protected static int MAX_HP;
+    protected Attire weapon;
+    protected Timer timer;
+    protected int MAX_HP;
     protected float parallax;
     protected int hp;
     protected int actionDistance;
+    protected int attackDistance;
     protected int angle;
 
     protected boolean isMirrored;
@@ -38,12 +40,18 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         isMirrored = false;
         appearance = new HashMap<>();
         currentState = UnitState.IDLE;
+        attackDistance = 0;
         angle = 0;
         parallax = 0;
+        timer = new Timer(32);
     }
 
     public AbstractUnit(Vector2 pos) {
         this(pos.getX(), pos.getY());
+    }
+
+    public boolean isAttackTime() {
+        return timer.isAttackTime();
     }
 
     private void drawMask(Canvas canvas, Paint paint) {
@@ -140,6 +148,21 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         return matrix;
     }
 
+    protected void drawHp(Canvas canvas) {
+        if (hp < MAX_HP) {
+            Bitmap frame = getCurrentFrame();
+            float mid = MAX_HP;
+            Paint paint = new Paint();
+            paint.setColor(Color.RED);
+            paint.setStrokeWidth(2);
+            canvas.drawLine(getX() - mid, getY() - frame.getHeight(),
+                    getX() + mid, getY() - frame.getHeight(), paint);
+            paint.setColor(Color.GREEN);
+            canvas.drawLine(getX() - mid, getY() - frame.getHeight(),
+                    getX() + (hp * 2 - mid), getY() - frame.getHeight(), paint);
+        }
+    }
+
     @Override
     public int getWidth() {
         return getCurrentFrame().getWidth();
@@ -196,6 +219,18 @@ public abstract class AbstractUnit implements Updatable, Drawable {
         return hp;
     }
 
+    public void damage(AbstractUnit attacker, Attire weapon) {
+        if (weapon == null) {
+            return;
+        }
+        hp -= weapon.getDamage();
+        if (attacker.getX() > getX()) {
+            setX(getX() - weapon.getPushForce());
+        } else {
+            setX(getX() + weapon.getPushForce());
+        }
+    }
+
     public void damage(int damage) {
         hp -= damage;
     }
@@ -218,6 +253,14 @@ public abstract class AbstractUnit implements Updatable, Drawable {
 
     public void setAngle(int angle) {
         this.angle = angle;
+    }
+
+    public int getAttackDistance() {
+        return attackDistance;
+    }
+
+    public Attire getWeapon() {
+        return weapon;
     }
 
     @Override

@@ -25,6 +25,6 @@ public class Snail extends ActiveUnit {
         speed = 0.5f;
         vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
-        hp = 3;
+        hp = MAX_HP = 3;
     }
 }

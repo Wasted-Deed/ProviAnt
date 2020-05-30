@@ -18,6 +18,6 @@ public class Worm extends ActiveUnit {
         jumpSpeed = 2;
         speed = 0.5f;
         vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
-        hp = 4;
+        hp = MAX_HP = 4;
     }
 }

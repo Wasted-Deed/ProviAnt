@@ -55,16 +55,18 @@ public class UnitSolver {
             unit.damage(1);
         }
     }
+
     private void checkState(MovableUnit unit) {
-        if(!(unit instanceof ActiveUnit)) {
+        if (!(unit instanceof ActiveUnit)) {
             return;
         }
-        if(unit.hasCome()) {
+        if (unit.hasCome()) {
             unit.setCurrentState(UnitState.IDLE);
         } else {
             unit.setCurrentState(UnitState.WALK);
         }
     }
+
     public void update() {
         for (int i = 0; i < MOVABLE_UNITS.size(); i++) {
             MovableUnit unit = MOVABLE_UNITS.get(i);
@@ -131,6 +133,22 @@ public class UnitSolver {
         if (unit instanceof MovableUnit) {
             MOVABLE_UNITS.remove(unit);
         }
+    }
+
+    //O(n)
+    public ActiveUnit getNearestActive(MovableUnit unit) {
+        int dist = unit.getAttackDistance();
+        ActiveUnit res = null;
+        for (MovableUnit movable : MOVABLE_UNITS) {
+            if (movable instanceof ActiveUnit) {
+                float cur = Vector2.getDistance(movable.getPos(), unit.getPos());
+                if (cur <= dist) {
+                    dist = (int) cur;
+                    res = (ActiveUnit) movable;
+                }
+            }
+        }
+        return res;
     }
 
     public void addDrawableUnit(Drawable unit) {

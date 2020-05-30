@@ -79,7 +79,7 @@ public class Controller extends InterfaceUnit {
         return isPicked;
     }
 
-    //@Override
+    @Override
     public boolean isTouched(Vector2 touch) {
         return touchBias(touch).getLength() <= SIZE_FRAME;
     }

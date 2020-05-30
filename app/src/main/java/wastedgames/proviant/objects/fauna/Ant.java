@@ -2,15 +2,16 @@ package wastedgames.proviant.objects.fauna;
 
 import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.UnitState;
-import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
+import wastedgames.proviant.objects.Attire;
 import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.landscape.TileMap;
 
 public class Ant extends MovableUnit {
     private int efficiency;
+
     //TODO: Handle unexpected hops of bitmap in CRAWL state
     public Ant(float x, float y) {
         super(x, y);
@@ -26,9 +27,12 @@ public class Ant extends MovableUnit {
         efficiency = 8;
         setStandardMask(Image.ANT_WORK_0);
         jumpSpeed = 2;
-        speed = damage = 1;
+        speed = 1;
         MAX_JUMP_HEIGHT = Physics.ANT_JUMP_HEIGHT;
         hp = MAX_HP = 5;
+        attackDistance = actionDistance / 2;
+        timer.setAttackFrequency(16);
+        weapon = new Attire(1, 5);
     }
 
     public int getEfficiency() {

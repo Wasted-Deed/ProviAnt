@@ -9,10 +9,11 @@ import wastedgames.proviant.objects.Appearance;
 public class Cloud extends AbstractUnit {
     public Cloud(float x, float y) {
         super(x, y);
-        String name = "CLOUD_" + (int) (Math.random() * 5);
+        String name = "CLOUD_" + (int) (Math.random() * 4);
         appearance.put(UnitState.EXIST,
                 new Appearance(ResourcesLoader.getImage(Image.valueOf(name))));
         currentState = UnitState.EXIST;
+        parallax = 1;
         setStandardMask(Image.valueOf(name));
     }
 

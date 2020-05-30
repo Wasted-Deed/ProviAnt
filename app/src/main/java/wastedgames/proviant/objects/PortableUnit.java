@@ -1,5 +1,6 @@
 package wastedgames.proviant.objects;
 
+import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.interfaces.Portable;
 
 public class PortableUnit extends MovableUnit implements Portable {
@@ -8,6 +9,10 @@ public class PortableUnit extends MovableUnit implements Portable {
 
     public PortableUnit(float x, float y) {
         super(x, y);
+    }
+
+    public PortableUnit(Vector2 pos) {
+        super(pos);
     }
 
     @Override

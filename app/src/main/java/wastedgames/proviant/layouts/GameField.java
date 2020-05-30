@@ -43,15 +43,16 @@ public class GameField {
     //TODO: Make it invisible the land / underground for a unit
     public GameField(int mapSizeX, int mapSizeY) {
         REAL_SIZE = new Vector2(TileMap.TILE_SIZE * mapSizeX, TileMap.TILE_SIZE * mapSizeY);
-        map = new TileMap(mapSizeX, mapSizeY);
         UNIT_SOLVER = new UnitSolver(this);
+        map = new TileMap(mapSizeX, mapSizeY);
+        map.setAddTile(UNIT_SOLVER::addBoth);
         ENV_SOLVER = new EnvironmentSolver();
         TOUCH_SOLVER = new TouchSolver();
         SCALE = 8;
         SCALED_SCREEN = new Vector2(SCREEN_WIDTH / SCALE, SCREEN_HEIGHT / SCALE);
         CAMERA = new Vector2(0, 0);
         CAMERA_Y_SETUP = (int) (FLOOR_Y - SCALED_SCREEN.getY() / 2);
-        ENV_SOLVER.addEnvironment(UNIT_SOLVER, REAL_SIZE);
+        ENV_SOLVER.addEnvironment(UNIT_SOLVER, REAL_SIZE, SCALED_SCREEN);
         ENV_SOLVER.addUnits(UNIT_SOLVER, REAL_SIZE);
         setupHero();
         touchType = TouchType.NONE;
@@ -61,7 +62,6 @@ public class GameField {
     private void setupHero() {
         int x = (int) (Math.random() * REAL_SIZE.getX());
         Larva larva = new Larva(x, FLOOR_Y);
-        System.out.println(x);
         attachCamera(x, FLOOR_Y);
         UNIT_SOLVER.addBoth(larva);
         heroInterface = new Interface(larva);
@@ -107,7 +107,7 @@ public class GameField {
         }
         if (IS_TOUCHING) {
             touchType = TouchType.TOUCH;
-            TOUCH_SOLVER.doWhileTouching(hero, heroInterface.getController(), UNIT_SOLVER, map);
+            TOUCH_SOLVER.doWhileTouching(hero, heroInterface, UNIT_SOLVER, map);
         } else {
             hero.setCurrentState(UnitState.IDLE);
             touchType = TouchType.NONE;
@@ -115,11 +115,11 @@ public class GameField {
         }
         attachCamera();
         hero.setAim(hero.getX(), hero.getY());
+        heroInterface.update();
     }
 
     public void update() {
         heroAction();
-        heroInterface.update();
         UNIT_SOLVER.update();
     }
 

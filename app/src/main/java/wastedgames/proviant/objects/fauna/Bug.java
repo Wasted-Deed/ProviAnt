@@ -20,7 +20,6 @@ public class Bug extends ActiveUnit {
         speed = 0.8f;
         vision = (int) (GameField.SCALED_SCREEN.getX() / 3);
         MAX_JUMP_HEIGHT = Physics.SNAIL_JUMP_HEIGHT;
-        hp = 4;
+        hp = MAX_HP = 4;
     }
-
 }

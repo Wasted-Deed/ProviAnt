@@ -2,12 +2,14 @@ package wastedgames.proviant.layouts;
 
 import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.UnitState;
-import wastedgames.proviant.objects.PortableUnit;
+import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.environment.BuildingUnit;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.landscape.Tile;
 import wastedgames.proviant.objects.landscape.TileMap;
+import wastedgames.proviant.objects.ui.AttackButton;
 import wastedgames.proviant.objects.ui.Controller;
+import wastedgames.proviant.objects.ui.Interface;
 
 import static wastedgames.proviant.layouts.GameField.getDisplayTouch;
 import static wastedgames.proviant.layouts.GameField.getScaledTouch;
@@ -38,7 +40,7 @@ public class TouchSolver {
         }
     }
 
-    public void doWhileTouching(Ant hero, Controller controller, UnitSolver solver, TileMap map) {
+    private boolean checkController(Ant hero, TileMap map, Controller controller) {
         controller.updateCenterPosition(getDisplayTouch());
         if (controller.isControlled()) {
             if (UnitState.isFloor(hero.getCurrentState())) {
@@ -49,14 +51,30 @@ public class TouchSolver {
                 heroUndergroundMovement(hero, controller, map);
 
             }
-            return;
+            return true;
         }
-        terraform(hero, solver, map);
+        return false;
     }
 
+    public void doWhileTouching(Ant hero, Interface ui, UnitSolver solver, TileMap map) {
+        if (checkController(hero, map, ui.getController())
+                || checkAttack(hero, solver, ui.getAttack())) {
+            return;
+        }
+        terraform(hero, map);
+    }
 
-    private void terraform(Ant hero, UnitSolver solver, TileMap map) {
-        if (hero.isPointReachable(getScaledTouch())) {
+    private boolean checkAttack(Ant hero, UnitSolver solver, AttackButton attack) {
+        MovableUnit nearest = solver.getNearestActive(hero);
+        if (nearest == null || !attack.isTouched(getDisplayTouch()) || !hero.isAttackTime()) {
+            return false;
+        }
+        nearest.damage(hero, hero.getWeapon());
+        return true;
+    }
+
+    private void terraform(Ant hero, TileMap map) {
+        if (hero.isPointReachable(map.getRealTilePos(getScaledTouch()))) {
             Tile touched = map.getTouchedTile();
             if (touched == null || !touched.isSolid()) {
                 if (hero.getCurrentState() == UnitState.WORK) {
@@ -68,11 +86,10 @@ public class TouchSolver {
                 }
                 return;
             }
-            PortableUnit drop = map.damageTouchedTile(hero.getEfficiency());
+            map.damageTouchedTile(hero.getEfficiency());
             hero.setCurrentState(UnitState.WORK);
-            if (drop != null) {
-                solver.addBoth(drop);
-            }
+        } else {
+            hero.setCurrentState(UnitState.IDLE);
         }
     }
 }

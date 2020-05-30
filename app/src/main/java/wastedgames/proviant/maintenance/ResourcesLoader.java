@@ -140,6 +140,8 @@ public class ResourcesLoader {
                 R.drawable.stick_0, options));
         bitmaps.put(Image.STONE_0, BitmapFactory.decodeResource(resources,
                 R.drawable.stone_0, options));
+        bitmaps.put(Image.TILE_STONE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_stone_0, options));
         bitmaps.put(Image.SUN_0, BitmapFactory.decodeResource(resources,
                 R.drawable.sun_0, options));
         bitmaps.put(Image.DIRT_PILE_0, BitmapFactory.decodeResource(resources,
@@ -236,6 +238,8 @@ public class ResourcesLoader {
                 R.drawable.worm_move_4, options));
         bitmaps.put(Image.WORM_MOVE_5, BitmapFactory.decodeResource(resources,
                 R.drawable.worm_move_5, options));
+        bitmaps.put(Image.NEST_0, BitmapFactory.decodeResource(resources,
+                R.drawable.nest_0, options));
         BASIC_FONT = BitmapFactory.decodeResource(resources, R.drawable.font_0, options);
 
     }

@@ -17,12 +17,14 @@ public class Interface implements Drawable, Updatable {
 
     private AbstractUnit holder;
     private HpBar hp;
+    private AttackButton attack;
     private ProcessingBar process;
     private Controller controller;
     private Text text;
 
     public Interface(AbstractUnit holder) {
         this.holder = holder;
+        attack = new AttackButton(new Vector2(0, 0));
         hp = new HpBar(new Vector2(0, 0));
         controller = new Controller(new Vector2(0, 0));
         process = new ProcessingBar(new Vector2(holder.getX(), holder.getY() - STEP));
@@ -35,6 +37,7 @@ public class Interface implements Drawable, Updatable {
             process.draw(canvas, paint, camera);
         }
         hp.draw(canvas, paint, camera);
+        attack.draw(canvas, paint, camera);
         controller.draw(canvas, paint, camera);
     }
 
@@ -69,6 +72,10 @@ public class Interface implements Drawable, Updatable {
         process.setX(holder.getX());
         process.setY(holder.getY() - STEP);
         hp.setCurrentHP(holder.getHp());
+    }
+
+    public AttackButton getAttack() {
+        return attack;
     }
 
     public HpBar getHp() {

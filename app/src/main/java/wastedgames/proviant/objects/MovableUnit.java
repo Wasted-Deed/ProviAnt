@@ -17,7 +17,6 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     protected float currentSpeed;
     protected int jumpSpeed;
     protected int vision;
-    protected int damage;
     protected boolean isAttached;
 
     private int currentJumpHeight;
@@ -30,6 +29,10 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
         currentSpeed = 0;
         hp = 1;
         aim = new Vector2(x, y);
+    }
+
+    public MovableUnit(Vector2 pos) {
+        this(pos.getX(), pos.getY());
     }
 
     private void jump() {
@@ -61,7 +64,7 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
     }
 
     public boolean hasCome() {
-        return Vector2.getDistance(aim, pos) < speed;
+        return Vector2.getDistance(aim, pos) <= 2 * speed;
     }
 
     public float getSpeed() {
@@ -94,10 +97,6 @@ public abstract class MovableUnit extends AbstractUnit implements Movable {
             this.pickedObject.setHolder(null);
             this.pickedObject.setPickUp(false);
         }
-    }
-
-    public int getDamage() {
-        return damage;
     }
 
     public boolean checkIfLandedOnBlock(TileMap map) {

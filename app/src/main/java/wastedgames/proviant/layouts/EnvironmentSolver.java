@@ -1,6 +1,7 @@
 package wastedgames.proviant.layouts;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.environment.BackgroundGrass;
 import wastedgames.proviant.objects.environment.Chamomile;
@@ -21,9 +22,14 @@ import static wastedgames.proviant.layouts.GameField.FLOOR_Y;
 public class EnvironmentSolver {
     final int BASES_COUNT = 2;
 
-    public void addEnvironment(UnitSolver solver, Vector2 size) {
+    public void addEnvironment(UnitSolver solver, Vector2 size, Vector2 screenSize) {
         Sun sun = new Sun(100, 70);
         solver.addDrawableUnit(sun);
+        for (int i = 0; i < 10; i++) {
+            Cloud cloud = new Cloud((int) (Math.random() * screenSize.getX()),
+                    (int) (Math.random() * screenSize.getY() / 3));
+            solver.addDrawableUnit(cloud);
+        }
         for (int i = 0; i <= 10; i++) {
             BackgroundGrass backgroundGrass = new BackgroundGrass(256 * i, FLOOR_Y);
             solver.addDrawableUnit(backgroundGrass);
@@ -73,7 +79,8 @@ public class EnvironmentSolver {
     }
 
     public void solveClouds(UnitSolver solver) {
-
+        if (ThreadSolver.CURRENT_FRAME % 16 == 0) {
+        }
     }
 
     public void checkEnvUnit(AbstractUnit unit, Vector2 screenSize) {
