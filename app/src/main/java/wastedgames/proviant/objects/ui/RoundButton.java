@@ -7,15 +7,15 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.layouts.GameField;
 import wastedgames.proviant.objects.InterfaceUnit;
 
-public class AttackButton extends InterfaceUnit {
+public class RoundButton extends InterfaceUnit {
     private final Vector2 INIT_CENTER;
     final int SIZE_FRAME = 10;
     final int STEP = 5;
 
-    public AttackButton(Vector2 pos) {
+    public RoundButton(Vector2 pos) {
         super(pos);
-        INIT_CENTER = new Vector2(GameField.SCALED_SCREEN.getX() - STEP - SIZE_FRAME,
-                GameField.SCALED_SCREEN.getY() - SIZE_FRAME - STEP);
+        INIT_CENTER = new Vector2(GameField.SCALED_SCREEN.getX() - STEP - pos.getX(),
+                GameField.SCALED_SCREEN.getY() - STEP - pos.getY());
     }
 
     @Override

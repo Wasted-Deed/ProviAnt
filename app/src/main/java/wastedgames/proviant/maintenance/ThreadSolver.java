@@ -19,7 +19,7 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
     public static int SCREEN_HEIGHT;
     public static int CURRENT_FRAME;
     public static boolean IS_TOUCHING;
-
+    public static boolean HAD_TOUCHED;
     private MainThread thread;
     private GameField gameField;
     private Layout currentLayout;
@@ -37,6 +37,7 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
         currentLayout = Layout.GAME_FIELD;
         CURRENT_FRAME = 1;
         IS_TOUCHING = false;
+        HAD_TOUCHED = false;
         TOUCH = new Vector2(0, 0);
         touchIDs = new ArrayList<>();
     }
@@ -64,14 +65,14 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
     public void surfaceDestroyed(SurfaceHolder holder) {
         try {
             thread.setRunning(false);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        if(canvas == null){
+        if (canvas == null) {
             return;
         }
         super.draw(canvas);
@@ -89,6 +90,7 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_UP:
                 IS_TOUCHING = false;
+                HAD_TOUCHED = false;
                 touchIDs.clear();
                 return true;
             case MotionEvent.ACTION_POINTER_UP:

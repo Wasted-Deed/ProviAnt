@@ -240,6 +240,8 @@ public class ResourcesLoader {
                 R.drawable.worm_move_5, options));
         bitmaps.put(Image.NEST_0, BitmapFactory.decodeResource(resources,
                 R.drawable.nest_0, options));
+        bitmaps.put(Image.BAG, BitmapFactory.decodeResource(resources,
+                R.drawable.bag, options));
         BASIC_FONT = BitmapFactory.decodeResource(resources, R.drawable.font_0, options);
 
     }

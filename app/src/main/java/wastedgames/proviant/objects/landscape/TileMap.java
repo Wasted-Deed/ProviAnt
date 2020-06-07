@@ -29,6 +29,7 @@ public class TileMap implements Updatable {
         map = new Tile[sizeX][sizeY];
         solver = new TileSolver(map, sizeX, sizeY);
         mapSolver = new MapSolver(map, sizeX, sizeY, solver);
+        mapSolver.generate();
     }
     public void setAddTile(Consumer<PortableUnit> addTile) {
         solver.setAddTile(addTile);

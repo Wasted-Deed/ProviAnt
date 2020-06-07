@@ -23,6 +23,14 @@ public class PortableUnit extends MovableUnit implements Portable {
         }
     }
 
+    public boolean isPicked() {
+        return isPicked;
+    }
+
+    public void setPicked(boolean picked) {
+        isPicked = picked;
+    }
+
     @Override
     public void setPickUp(boolean isPicked) {
         this.isPicked = isPicked;

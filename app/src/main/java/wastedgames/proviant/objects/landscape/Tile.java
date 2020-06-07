@@ -2,6 +2,7 @@ package wastedgames.proviant.objects.landscape;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ public abstract class Tile implements Destroyable, Drawable {
 
     protected int x;
     protected int y;
+    protected int humidity;
 
     protected int durability;
     protected int damage;
@@ -34,6 +36,7 @@ public abstract class Tile implements Destroyable, Drawable {
         this.y = y;
         appearance = new HashMap<>();
         damage = 0;
+        humidity = 0;
         currentState = TileState.EXIST;
     }
 
@@ -94,7 +97,11 @@ public abstract class Tile implements Destroyable, Drawable {
 
     @Override
     public void draw(Canvas canvas, Paint paint, Vector2 camera) {
+        if (humidity > 0) {
+            paint.setColorFilter(new LightingColorFilter(0xFF7F7F7F, 0x00000000));
+        }
         canvas.drawBitmap(appearance.get(currentState).getCurrentFrame(), x, y, paint);
+        paint.setColorFilter(null);
     }
 
     public void setCurrentState(TileState currentState) {

@@ -17,18 +17,26 @@ public class Interface implements Drawable, Updatable {
 
     private AbstractUnit holder;
     private HpBar hp;
-    private AttackButton attack;
+    private RoundButton attack;
+    private RoundButton pick;
     private ProcessingBar process;
     private Controller controller;
     private Text text;
+    State state;
+
+    public enum State {
+        MOVE, PICK, ATTACK, NONE
+    }
 
     public Interface(AbstractUnit holder) {
         this.holder = holder;
-        attack = new AttackButton(new Vector2(0, 0));
+        attack = new RoundButton(new Vector2(10, 10));
+        pick = new RoundButton(new Vector2(10, 35));
         hp = new HpBar(new Vector2(0, 0));
         controller = new Controller(new Vector2(0, 0));
         process = new ProcessingBar(new Vector2(holder.getX(), holder.getY() - STEP));
         text = new Text(Font.BASIC);
+        state = State.MOVE;
     }
 
     @Override
@@ -38,6 +46,7 @@ public class Interface implements Drawable, Updatable {
         }
         hp.draw(canvas, paint, camera);
         attack.draw(canvas, paint, camera);
+        pick.draw(canvas, paint, camera);
         controller.draw(canvas, paint, camera);
     }
 
@@ -74,8 +83,20 @@ public class Interface implements Drawable, Updatable {
         hp.setCurrentHP(holder.getHp());
     }
 
-    public AttackButton getAttack() {
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public RoundButton getAttack() {
         return attack;
+    }
+
+    public RoundButton getPick() {
+        return pick;
     }
 
     public HpBar getHp() {

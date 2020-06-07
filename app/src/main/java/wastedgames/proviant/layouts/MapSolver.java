@@ -28,9 +28,13 @@ public class MapSolver {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.solver = solver;
+    }
+
+    public void generate() {
         fillMap(FLOOR_START);
         generateCaves(100);
         generateStones(50);
+
     }
 
     private void generateCaves(int count) {

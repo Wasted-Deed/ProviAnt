@@ -9,10 +9,12 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.enumerations.Weather;
 import wastedgames.proviant.interfaces.Drawable;
+import wastedgames.proviant.interfaces.Portable;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
+import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.Drop;
 import wastedgames.proviant.objects.environment.Meat;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
@@ -145,6 +147,23 @@ public class UnitSolver {
                 if (cur <= dist) {
                     dist = (int) cur;
                     res = (ActiveUnit) movable;
+                }
+            }
+        }
+        return res;
+    }
+    public PortableUnit getNearestPortable(MovableUnit unit) {
+        int dist = unit.getAttackDistance();
+        PortableUnit res = null;
+        for (MovableUnit movable : MOVABLE_UNITS) {
+            if (movable instanceof PortableUnit) {
+                if(((PortableUnit) movable).isPicked()) {
+                    continue;
+                }
+                float cur = Vector2.getDistance(movable.getPos(), unit.getPos());
+                if (cur <= dist) {
+                    dist = (int) cur;
+                    res = (PortableUnit) movable;
                 }
             }
         }

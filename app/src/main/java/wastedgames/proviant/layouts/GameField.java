@@ -9,6 +9,7 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.TouchType;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.enumerations.Weather;
+import wastedgames.proviant.objects.environment.unique.Bag;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Larva;
 import wastedgames.proviant.objects.landscape.TileMap;
@@ -62,8 +63,10 @@ public class GameField {
     private void setupHero() {
         int x = (int) (Math.random() * REAL_SIZE.getX());
         Larva larva = new Larva(x, FLOOR_Y);
+        Bag bag = new Bag(x, FLOOR_Y);
         attachCamera(x, FLOOR_Y);
         UNIT_SOLVER.addBoth(larva);
+        UNIT_SOLVER.addBoth(bag);
         heroInterface = new Interface(larva);
     }
 
