@@ -9,16 +9,18 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.TouchType;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.enumerations.Weather;
+import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.environment.unique.Bag;
 import wastedgames.proviant.objects.fauna.Ant;
 import wastedgames.proviant.objects.fauna.Larva;
 import wastedgames.proviant.objects.landscape.TileMap;
 import wastedgames.proviant.objects.ui.Interface;
 
+import static wastedgames.proviant.maintenance.ThreadSolver.FIRST_TOUCH;
 import static wastedgames.proviant.maintenance.ThreadSolver.IS_TOUCHING;
+import static wastedgames.proviant.maintenance.ThreadSolver.LAST_TOUCH;
 import static wastedgames.proviant.maintenance.ThreadSolver.SCREEN_HEIGHT;
 import static wastedgames.proviant.maintenance.ThreadSolver.SCREEN_WIDTH;
-import static wastedgames.proviant.maintenance.ThreadSolver.TOUCH;
 
 public class GameField {
 
@@ -148,13 +150,17 @@ public class GameField {
     }
 
     public static Vector2 getScaledTouch() {
-        Vector2 division = TOUCH.dividedCopy(SCALE);
+        Vector2 division = FIRST_TOUCH.dividedCopy(SCALE);
         division.addVector2(CAMERA);
         return division;
     }
 
     public static Vector2 getDisplayTouch() {
-        return TOUCH.dividedCopy(SCALE);
+        return FIRST_TOUCH.dividedCopy(SCALE);
+    }
+
+    public static Vector2 getDisplayLastTouch() {
+        return ThreadSolver.getTouchCount() > 1 ? LAST_TOUCH.dividedCopy(SCALE) : null;
     }
 
     boolean checkIfOnScreen(float x, float y, int step) {

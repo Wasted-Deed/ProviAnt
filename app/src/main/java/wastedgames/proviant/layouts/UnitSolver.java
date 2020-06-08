@@ -9,12 +9,13 @@ import wastedgames.proviant.engine.Vector2;
 import wastedgames.proviant.enumerations.UnitState;
 import wastedgames.proviant.enumerations.Weather;
 import wastedgames.proviant.interfaces.Drawable;
-import wastedgames.proviant.interfaces.Portable;
 import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.AbstractUnit;
 import wastedgames.proviant.objects.MovableUnit;
 import wastedgames.proviant.objects.PortableUnit;
+import wastedgames.proviant.objects.environment.BuildingUnit;
+import wastedgames.proviant.objects.environment.DirtPile;
 import wastedgames.proviant.objects.environment.Drop;
 import wastedgames.proviant.objects.environment.Meat;
 import wastedgames.proviant.objects.fauna.ActiveUnit;
@@ -113,6 +114,10 @@ public class UnitSolver {
                 unit.damage(hero.getDamage());
             }
         }*/
+        if (unit instanceof BuildingUnit && Vector2.getDistance(unit.getPos(), hero.getPos()) >
+                GameField.SCALED_SCREEN.getY() + GameField.SCALED_SCREEN.getX()) {
+            unit.destroy();
+        }
         if (unit instanceof Larva) {
             GAMEFIELD.larvaAction((Larva) unit);
         }
@@ -152,12 +157,13 @@ public class UnitSolver {
         }
         return res;
     }
+
     public PortableUnit getNearestPortable(MovableUnit unit) {
-        int dist = unit.getAttackDistance();
+        int dist = unit.getActionDistance();
         PortableUnit res = null;
         for (MovableUnit movable : MOVABLE_UNITS) {
             if (movable instanceof PortableUnit) {
-                if(((PortableUnit) movable).isPicked()) {
+                if (((PortableUnit) movable).isPicked()) {
                     continue;
                 }
                 float cur = Vector2.getDistance(movable.getPos(), unit.getPos());

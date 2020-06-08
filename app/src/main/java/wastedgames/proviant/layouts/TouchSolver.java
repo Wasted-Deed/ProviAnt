@@ -13,6 +13,7 @@ import wastedgames.proviant.objects.landscape.TileMap;
 import wastedgames.proviant.objects.ui.Controller;
 import wastedgames.proviant.objects.ui.Interface;
 
+import static wastedgames.proviant.layouts.GameField.getDisplayLastTouch;
 import static wastedgames.proviant.layouts.GameField.getDisplayTouch;
 import static wastedgames.proviant.layouts.GameField.getScaledTouch;
 
@@ -57,7 +58,20 @@ public class TouchSolver {
         ui.getController().updateCenterPosition(getDisplayTouch());
         if (ui.getController().isControlled()) {
             ui.setState(Interface.State.MOVE);
-        } else if (ui.getAttack().isTouched(getDisplayTouch())) {
+            checkController(hero, map, ui.getController());
+            if (getDisplayLastTouch() == null) {
+                return;
+            }
+            if (ui.getAttack().isTouched(getDisplayLastTouch())) {
+                checkAttack(hero, solver);
+            } else if (ui.getPick().isTouched(getDisplayLastTouch()) &&
+                    !ThreadSolver.HAD_TOUCHED) {
+                ThreadSolver.HAD_TOUCHED = true;
+                checkPick(hero, solver);
+            }
+            return;
+        }
+        if (ui.getAttack().isTouched(getDisplayTouch())) {
             ui.setState(Interface.State.ATTACK);
         } else if (ui.getPick().isTouched(getDisplayTouch()) &&
                 !ThreadSolver.HAD_TOUCHED) {
@@ -68,9 +82,6 @@ public class TouchSolver {
         }
 
         switch (ui.getState()) {
-            case MOVE:
-                checkController(hero, map, ui.getController());
-                break;
             case ATTACK:
                 checkAttack(hero, solver);
                 break;

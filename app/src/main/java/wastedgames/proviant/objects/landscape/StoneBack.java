@@ -7,13 +7,16 @@ import wastedgames.proviant.maintenance.Physics;
 import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.objects.Appearance;
 
-public class StoneTile extends Tile {
-    public StoneTile(int x, int y, int size) {
+public class StoneBack extends Tile {
+
+    public StoneBack(int x, int y, int size) {
         super(x, y, size);
-        type = TileType.STONE;
+        type = TileType.BACKGROUND;
         appearance.put(TileState.EXIST,
-                new Appearance(ResourcesLoader.getImage(Image.TILE_STONE_0)));
-        durability = Physics.DIRT_DURABILITY * 2;
-        isSolid = true;
+                new Appearance(ResourcesLoader.getImage(Image.TILE_STONE_BACK)));
+        appearance.put(TileState.ROUNDED, new Appearance
+                (ResourcesLoader.getBitmapSet(Image.TILE_DIRT_BACK_0, Image.TILE_DIRT_BACK_3),
+                        0, 0));
+        isSolid = false;
     }
 }

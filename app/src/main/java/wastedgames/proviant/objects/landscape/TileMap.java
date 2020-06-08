@@ -3,7 +3,6 @@ package wastedgames.proviant.objects.landscape;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import java.util.Stack;
 import java.util.function.Consumer;
 
 import wastedgames.proviant.engine.Vector2;
@@ -11,7 +10,6 @@ import wastedgames.proviant.enumerations.TileType;
 import wastedgames.proviant.interfaces.Updatable;
 import wastedgames.proviant.layouts.MapSolver;
 import wastedgames.proviant.objects.PortableUnit;
-import wastedgames.proviant.objects.environment.DirtPile;
 
 import static wastedgames.proviant.layouts.GameField.SCALED_SCREEN;
 import static wastedgames.proviant.layouts.GameField.getScaledTouch;
@@ -23,18 +21,22 @@ public class TileMap implements Updatable {
 
     private TileSolver solver;
     private Tile[][] map;
+    private Tile[][] back_map;
     MapSolver mapSolver;
 
     public TileMap(int sizeX, int sizeY) {
         map = new Tile[sizeX][sizeY];
-        solver = new TileSolver(map, sizeX, sizeY);
-        mapSolver = new MapSolver(map, sizeX, sizeY, solver);
+        back_map = new Tile[sizeX][sizeY];
+        solver = new TileSolver(map, back_map, sizeX, sizeY);
+        mapSolver = new MapSolver(map, back_map, sizeX, sizeY, solver);
         mapSolver.generate();
     }
+
     public void setAddTile(Consumer<PortableUnit> addTile) {
         solver.setAddTile(addTile);
     }
-    public void draw(Canvas canvas, Paint paint, Vector2 camera, boolean isBackground) {
+
+    public void draw(Canvas canvas, Paint paint, Vector2 camera, boolean isBack) {
         int startX = (int) (camera.getX() / TILE_SIZE);
         int endX = (int) (startX + SCALED_SCREEN.getX() / TILE_SIZE + 1);
         int startY = (int) (camera.getY() / TILE_SIZE);
@@ -44,11 +46,9 @@ public class TileMap implements Updatable {
                 if (!solver.checkBounds(x, y)) {
                     continue;
                 }
-                if (map[x][y].getType() == TileType.AIR) {
-                    continue;
-                }
-                if (map[x][y].getType() == TileType.BACKGROUND && isBackground ||
-                        map[x][y].getType() != TileType.BACKGROUND && !isBackground) {
+                if (isBack && back_map[x][y].getType() != TileType.AIR) {
+                    back_map[x][y].draw(canvas, paint, camera);
+                } else if (map[x][y].getType() != TileType.AIR) {
                     map[x][y].draw(canvas, paint, camera);
                 }
             }
@@ -88,6 +88,7 @@ public class TileMap implements Updatable {
             solver.destroyTile(x, y);
         }
     }
+
     private int countSolidAround(int x, int y) {
         if (!solver.checkTilesAround(x, y)) {
             return 8;

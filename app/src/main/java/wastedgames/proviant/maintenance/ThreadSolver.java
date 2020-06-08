@@ -14,7 +14,8 @@ import wastedgames.proviant.layouts.GameField;
 
 
 public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback {
-    public static Vector2 TOUCH;
+    public static Vector2 FIRST_TOUCH;
+    public static Vector2 LAST_TOUCH;
     public static int SCREEN_WIDTH;
     public static int SCREEN_HEIGHT;
     public static int CURRENT_FRAME;
@@ -24,7 +25,7 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
     private GameField gameField;
     private Layout currentLayout;
 
-    private ArrayList<Integer> touchIDs;
+    private static ArrayList<Integer> touchIDs;
 
     public ThreadSolver(Context context) {
         super(context);
@@ -38,7 +39,8 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
         CURRENT_FRAME = 1;
         IS_TOUCHING = false;
         HAD_TOUCHED = false;
-        TOUCH = new Vector2(0, 0);
+        FIRST_TOUCH = new Vector2(0, 0);
+        LAST_TOUCH = new Vector2(0, 0);
         touchIDs = new ArrayList<>();
     }
 
@@ -103,12 +105,21 @@ public class ThreadSolver extends SurfaceView implements SurfaceHolder.Callback 
 
         }
         IS_TOUCHING = true;
+        int firstTouch = touchIDs.get(0);
         int lastTouch = touchIDs.get(touchIDs.size() - 1);
-        if (lastTouch < event.getPointerCount()) {
-            TOUCH.setX((int) event.getX(lastTouch));
-            TOUCH.setY((int) event.getY(lastTouch));
+        if (firstTouch >= 0 && firstTouch < event.getPointerCount()) {
+            FIRST_TOUCH.setX((int) event.getX(firstTouch));
+            FIRST_TOUCH.setY((int) event.getY(firstTouch));
+        }
+        if (touchIDs.size() > 1 && lastTouch < event.getPointerCount()) {
+            LAST_TOUCH.setX((int) event.getX(lastTouch));
+            LAST_TOUCH.setY((int) event.getY(lastTouch));
         }
         return true;
+    }
+
+    public static int getTouchCount() {
+        return touchIDs.size();
     }
 
     public void update() {

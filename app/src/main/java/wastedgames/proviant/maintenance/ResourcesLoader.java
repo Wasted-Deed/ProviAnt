@@ -242,6 +242,10 @@ public class ResourcesLoader {
                 R.drawable.nest_0, options));
         bitmaps.put(Image.BAG, BitmapFactory.decodeResource(resources,
                 R.drawable.bag, options));
+        bitmaps.put(Image.TILE_STONE_BACK, BitmapFactory.decodeResource(resources,
+                R.drawable.tile_stone_back, options));
+        bitmaps.put(Image.STONE_PILE_0, BitmapFactory.decodeResource(resources,
+                R.drawable.stone_pile_0, options));
         BASIC_FONT = BitmapFactory.decodeResource(resources, R.drawable.font_0, options);
 
     }

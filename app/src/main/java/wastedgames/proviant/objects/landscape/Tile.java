@@ -10,10 +10,12 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 import wastedgames.proviant.engine.Vector2;
+import wastedgames.proviant.enumerations.Image;
 import wastedgames.proviant.enumerations.TileState;
 import wastedgames.proviant.enumerations.TileType;
 import wastedgames.proviant.interfaces.Destroyable;
 import wastedgames.proviant.interfaces.Drawable;
+import wastedgames.proviant.maintenance.ResourcesLoader;
 import wastedgames.proviant.maintenance.ThreadSolver;
 import wastedgames.proviant.objects.Appearance;
 
@@ -21,7 +23,6 @@ public abstract class Tile implements Destroyable, Drawable {
     protected HashMap<TileState, Appearance> appearance;
     protected TileState currentState;
     protected TileType type;
-
     protected int x;
     protected int y;
     protected int humidity;

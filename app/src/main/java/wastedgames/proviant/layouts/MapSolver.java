@@ -2,8 +2,10 @@ package wastedgames.proviant.layouts;
 
 import wastedgames.proviant.objects.landscape.AirTile;
 import wastedgames.proviant.objects.landscape.Dirt;
+import wastedgames.proviant.objects.landscape.DirtBack;
 import wastedgames.proviant.objects.landscape.DirtGrass;
 import wastedgames.proviant.objects.landscape.GrassTop;
+import wastedgames.proviant.objects.landscape.StoneBack;
 import wastedgames.proviant.objects.landscape.StoneTile;
 import wastedgames.proviant.objects.landscape.Tile;
 import wastedgames.proviant.objects.landscape.TileSolver;
@@ -15,6 +17,7 @@ public class MapSolver {
     TileSolver solver;
 
     Tile[][] map;
+    Tile[][] back_map;
     private int sizeX;
     private int sizeY;
 
@@ -23,8 +26,9 @@ public class MapSolver {
     private final int MAX_DURATION = 3;
 
 
-    public MapSolver(Tile[][] map, int sizeX, int sizeY, TileSolver solver) {
+    public MapSolver(Tile[][] map, Tile[][] back_map, int sizeX, int sizeY, TileSolver solver) {
         this.map = map;
+        this.back_map = back_map;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.solver = solver;
@@ -54,16 +58,20 @@ public class MapSolver {
             for (int y = 0; y < sizeY; y++) {
                 if (y == start) {
                     map[x][y] = new GrassTop(x, y, TILE_SIZE);
+                    back_map[x][y] = new AirTile(x, y, TILE_SIZE);
                     continue;
                 }
                 if (y == start + 1) {
                     map[x][y] = new DirtGrass(x, y, TILE_SIZE, (int) (Math.random() * 3));
+                    back_map[x][y] = new DirtBack(x, y, TILE_SIZE);
                     continue;
                 }
                 if (y > start + 1) {
                     map[x][y] = new Dirt(x, y, TILE_SIZE, (int) (Math.random() * 3));
+                    back_map[x][y] = new DirtBack(x, y, TILE_SIZE);
                 } else {
                     map[x][y] = new AirTile(x, y, TILE_SIZE);
+                    back_map[x][y] = new AirTile(x, y, TILE_SIZE);
                 }
             }
         }
@@ -114,6 +122,8 @@ public class MapSolver {
             return;
         } else if (map[x][y].isSolid()) {
             map[x][y] = new StoneTile(x, y, TILE_SIZE);
+            back_map[x][y] = new StoneBack(x, y, TILE_SIZE);
+            solver.handleTilesAround(x, y);
         }
         int dir = Math.random() > 0.5f ? 1 : -1;
         boolean isDirX = Math.random() > 0.5;

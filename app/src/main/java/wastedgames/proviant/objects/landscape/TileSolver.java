@@ -8,6 +8,7 @@ import wastedgames.proviant.enumerations.TileState;
 import wastedgames.proviant.enumerations.TileType;
 import wastedgames.proviant.objects.PortableUnit;
 import wastedgames.proviant.objects.environment.DirtPile;
+import wastedgames.proviant.objects.environment.StonePile;
 
 import static wastedgames.proviant.objects.landscape.TileMap.TILE_SIZE;
 
@@ -15,11 +16,13 @@ public class TileSolver {
     private Consumer<PortableUnit> addTile;
 
     private Tile[][] map;
+    private Tile[][] back_map;
     private int sizeX;
     private int sizeY;
 
-    public TileSolver(Tile[][] map, int sizeX, int sizeY) {
+    public TileSolver(Tile[][] map, Tile[][] back_map, int sizeX, int sizeY) {
         this.map = map;
+        this.back_map = back_map;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
     }
@@ -33,19 +36,30 @@ public class TileSolver {
                 checkBounds(x - 1, y) && checkBounds(x + 1, y);
     }
 
+    boolean checkRound(int x, int y, Tile tile) {
+        if (tile instanceof Dirt) {
+            return !map[x][y].isSolid();
+        }
+        if (tile instanceof StoneTile) {
+            return !(map[x][y] instanceof StoneTile);
+        }
+        return false;
+    }
+
     void checkRoundedTiles(int x, int y) {
         if (!checkTilesAround(x, y)) {
             return;
         }
-        if (map[x][y] instanceof Dirt) {
-            if (!map[x + 1][y].isSolid()) {
-                if (!map[x + 1][y - 1].isSolid() &&
-                        !map[x][y - 1].isSolid()) {
-                    map[x][y].setCurrentState(TileState.ROUNDED);
-                    map[x][y].setCurrentFrame(0);
-                    if (!map[x - 1][y - 1].isSolid() && !map[x - 1][y].isSolid()) {
-                        map[x][y].setCurrentState(TileState.ROUNDED);
-                        map[x][y].setCurrentFrame(4);
+        Tile cur = map[x][y];
+        if (cur instanceof Dirt) {
+            if (checkRound(x + 1, y, cur)) {
+                if (checkRound(x + 1, y - 1, cur) &&
+                        checkRound(x, y - 1, cur)) {
+                    cur.setCurrentState(TileState.ROUNDED);
+                    cur.setCurrentFrame(0);
+                    if (checkRound(x - 1, y - 1, cur) && checkRound(x - 1, y, cur)) {
+                        cur.setCurrentState(TileState.ROUNDED);
+                        cur.setCurrentFrame(4);
                         return;
                     }
                 }
@@ -81,22 +95,23 @@ public class TileSolver {
                 }
             }
         }
-        if (map[x][y] instanceof DirtBack) {
+        cur = back_map[x][y];
+        if (!map[x][y].isSolid() && cur instanceof DirtBack) {
             if (map[x][y - 1].isSolid() && map[x + 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(0);
+                cur.setCurrentState(TileState.ROUNDED);
+                cur.setCurrentFrame(0);
             } else if (map[x][y + 1].isSolid() && map[x + 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(1);
+                cur.setCurrentState(TileState.ROUNDED);
+                cur.setCurrentFrame(1);
             } else if (map[x][y + 1].isSolid() && map[x - 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(2);
+                cur.setCurrentState(TileState.ROUNDED);
+                cur.setCurrentFrame(2);
             } else if (map[x][y - 1].isSolid() && map[x - 1][y].isSolid()) {
-                map[x][y].setCurrentState(TileState.ROUNDED);
-                map[x][y].setCurrentFrame(3);
+                cur.setCurrentState(TileState.ROUNDED);
+                cur.setCurrentFrame(3);
             } else {
-                map[x][y].setCurrentState(TileState.EXIST);
-                map[x][y].setCurrentFrame(0);
+                cur.setCurrentState(TileState.EXIST);
+                cur.setCurrentFrame(0);
             }
         }
     }
@@ -120,7 +135,7 @@ public class TileSolver {
         destroySideHeft(x, y, 1, 0, tiles);
     }
 
-    private void handleTilesAround(int x, int y) {
+    public void handleTilesAround(int x, int y) {
         setTileEnvironment(x, y);
         setTileEnvironment(x, y - 1);
         setTileEnvironment(x, y + 1);
@@ -129,10 +144,17 @@ public class TileSolver {
     }
 
     public void destroyTile(int x, int y) {
-        map[x][y] = new DirtBack(x, y, TILE_SIZE);
         if (addTile != null) {
-            addTile.accept(new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE));
+            switch (map[x][y].getType()) {
+                case DIRT:
+                    addTile.accept(new DirtPile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE));
+                    break;
+                case STONE:
+                    addTile.accept(new StonePile(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE));
+                    break;
+            }
         }
+        map[x][y] = new AirTile(x, y, TILE_SIZE);
         handleTilesAround(x, y);
     }
 
@@ -143,7 +165,7 @@ public class TileSolver {
     private void setTileEnvironment(int x, int y) {
         if (checkBounds(x, y - 1) && checkBounds(x, y)) {
             if (map[x][y - 1].getType() == TileType.GRASS
-                    && !map[x][y].isSolid()) {
+                    && !(map[x][y] instanceof DirtGrass)) {
                 map[x][y - 1] = new AirTile(x, y - 1, TILE_SIZE);
             }
         }
